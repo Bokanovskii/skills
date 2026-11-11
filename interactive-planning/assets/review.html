@@ -1,0 +1,488 @@
+<!doctype html>
+<!--
+Base: the original Streaming inline widgets gallery produced with control-ui-e2e.
+Its first stylesheet is preserved in control-ui-gallery.css.
+Planning additions are isolated below. See references/template-origin.md.
+-->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; frame-src about:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="data:,">
+  <title>Plan review</title>
+  <style>
+/*__GALLERY_CSS__*/
+  </style>
+  <style>
+    /* Planning additions. The original gallery rules above stay unchanged. */
+    a:not(.g-btn) { color: var(--info); }
+    .g-nav a { color: var(--muted); }
+    .planning-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .planning-details { font-size: 12.5px; }
+    .planning-details summary { cursor: pointer; color: var(--text-strong); }
+    .planning-details h3, .planning-details h4 { font-size: 13px; color: var(--text-strong); }
+    .planning-details ul { padding-left: 20px; }
+    .planning-decision { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 4px; }
+    .planning-decision select { max-width: 100%; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--text-strong); font: inherit; font-size: 12px; }
+    .planning-preview { display: block; width: 100%; height: var(--preview-height); border: 0; }
+    .ex--text .ex-side { grid-column: 1 / -1; }
+    .ex-canvas figure { margin: 0; }
+    .ex-canvas img { max-width: 100%; height: auto; }
+    .ex-canvas figcaption { color: var(--muted); font-size: 12px; }
+    .ex-canvas pre { overflow: auto; font-family: var(--mono); white-space: pre-wrap; }
+    .planning-history { margin-top: 16px; }
+    .planning-controls { margin-top: 14px; }
+    .planning-note:empty { display: none; }
+    [hidden] { display: none !important; }
+    @media (max-width: 767px) { .planning-preview { height: var(--preview-mobile-height); } }
+    @media print { .g-bar, .ex-fb, #exports { display: none; } main { padding: 0; } }
+  </style>
+</head>
+<body>
+  <a class="g-skip" href="#sections">Skip to the examples</a>
+  <header class="g-bar">
+    <div class="g-bar__in">
+      <nav id="navigation" class="g-nav" aria-label="Gallery sections"></nav>
+      <span id="review-count" class="g-count"></span>
+      <span id="copy-status" class="g-copy-status" role="status" aria-live="polite"></span>
+      <button id="copy" class="g-btn g-btn--primary" type="button">Copy feedback</button>
+    </div>
+    </header>
+    <main id="content">
+      <div class="g-hero">
+        <div id="overview"></div>
+        <div class="g-theme" role="group" aria-label="Gallery theme">
+          <span class="g-theme__label">Theme</span>
+          <button type="button" data-theme-choice="dark" aria-pressed="true">Dark</button>
+          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+        </div>
+      </div>
+      <div class="g-banner" role="note">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <div><strong>Planning review only.</strong> Example labels distinguish evidence from proposed or static behavior. A review decision does not authorize implementation.</div>
+      </div>
+      <div id="storage-warning" class="g-warn planning-note" role="status"></div>
+      <div class="g-intro">
+        <section class="g-box planning-details" id="plan-details"><h2>Recommendation and scope</h2></section>
+        <section class="g-box"><h2>How to review</h2>
+          <ul><li>Compare examples and comment using their stable IDs.</li><li>Comments save only in this browser.</li><li>Use Copy feedback to return comments to the conversation.</li></ul>
+          <p class="g-fine">Theme changes the gallery. Static previews keep their authored colors.</p>
+        </section>
+      </div>
+      <p id="plan-meta" class="g-fine planning-text"></p>
+      <p id="save-status" class="g-fine" role="status" aria-live="polite"></p>
+      <div id="sections" tabindex="-1"></div>
+      <section id="history" class="g-section" hidden><div class="g-section__head"><h2>Removed items with feedback</h2><p>These comments refer to an earlier proposal. They remain in your exports.</p></div><div id="history-items"></div></section>
+      <section class="g-section" id="overall-section">
+        <div class="g-section__head"><h2>Overall feedback</h2><p>Record the overall direction or anything that the examples miss.</p></div>
+        <div class="g-box g-field planning-controls">
+          <label for="overall">Overall feedback</label>
+          <textarea id="overall" rows="6" placeholder="Overall direction, open questions, anything missing..."></textarea>
+        </div>
+      </section>
+      <section id="exports" class="g-section g-export">
+        <div class="g-section__head"><h2>Export feedback</h2><p>The text below updates as you type. It keeps item IDs, labels, comments, and review revisions together.</p></div>
+        <div class="g-export__row">
+          <button id="copy-2" class="g-btn g-btn--primary" type="button">Copy feedback</button>
+          <button id="download" class="g-btn g-btn--quiet" type="button">Download feedback</button>
+          <button id="plan-download" class="g-btn g-btn--quiet" type="button">Download plan</button>
+          <span id="action-status" class="g-export__status" role="status" aria-live="polite"></span>
+        </div>
+        <div class="g-field">
+          <label for="feedback-text">Feedback as Markdown</label>
+          <textarea id="feedback-text" readonly spellcheck="false"></textarea>
+        </div>
+        <details id="transfer" class="planning-details planning-controls"><summary>Restore a feedback backup</summary>
+          <p>Restore feedback for this plan from a downloaded JSON backup. This replaces existing feedback after confirmation.</p>
+          <label for="restore">Restore feedback</label><input id="restore" type="file" accept=".json,application/json">
+        </details>
+      </section>
+      <footer class="g-foot"><p>Feedback stays in this browser until you export it. This page does not authorize implementation, commits, publication, or deployment.</p></footer>
+    </main>
+  <noscript>This review page needs JavaScript. Enable it in a trusted local browser, or read the accompanying plan JSON.</noscript>
+  <script>
+    "use strict";
+    const plan = /*__PLAN__*/;
+    const decisions = { undecided: "Not reviewed", accept: "Accept", changes: "Request changes", discuss: "Discuss" };
+    const key = `interactive-planning:v1:${plan.planId}`;
+    const items = new Map(plan.sections.flatMap(section => section.items.map(item => [item.id, item])));
+    const reviewContext = { title: plan.title, summary: plan.summary, recommendation: plan.recommendation, scope: plan.scope };
+    let entries = Object.create(null);
+    let overall = "";
+    let theme = plan.theme ?? "dark";
+    let storageBlocked = false;
+    const $ = id => document.getElementById(id);
+    const canonical = value => JSON.stringify(value, (name, entry) =>
+      entry && typeof entry === "object" && !Array.isArray(entry)
+        ? Object.fromEntries(Object.keys(entry).sort().map(key => [key, entry[key]])) : entry);
+    const hasFeedback = entry => entry && (entry.comment !== "" || entry.decision !== "undecided");
+    function state(entry, item) { return !item ? "removed" : canonical(entry.item) === canonical(item) && canonical(entry.context) === canonical(reviewContext) ? "current" : "changed"; }
+    function element(tag, text, className) {
+      const node = document.createElement(tag);
+      if (text !== undefined) node.textContent = text;
+      if (className) node.className = className;
+      return node;
+    }
+    function validateBackup(data) {
+      if (!data || data.schemaVersion !== 1 || data.planId !== plan.planId || !Number.isSafeInteger(data.revision) || data.revision < 1 || !Array.isArray(data.entries)) throw new Error("Choose a version 1 backup for this plan.");
+      if ((data.overall !== undefined && typeof data.overall !== "string") || (data.theme !== undefined && !["dark", "light"].includes(data.theme))) throw new Error("The backup contains invalid overall feedback or a theme.");
+      const restored = Object.create(null);
+      for (const entry of data.entries) {
+        if (!entry || typeof entry.id !== "string" || !/^[a-z][a-z0-9-]{0,99}$/.test(entry.id) || Object.hasOwn(restored, entry.id) ||
+            typeof entry.comment !== "string" || !Object.hasOwn(decisions, entry.decision) ||
+            !Number.isSafeInteger(entry.reviewedRevision) || entry.reviewedRevision < 1 || typeof entry.updatedAt !== "string" ||
+            !entry.item || entry.item.id !== entry.id || typeof entry.item.title !== "string" || typeof entry.item.body !== "string" ||
+            !entry.context || ["title", "summary", "recommendation", "scope"].some(key => typeof entry.context[key] !== "string")) throw new Error("The backup contains an invalid feedback record.");
+        restored[entry.id] = { id: entry.id, comment: entry.comment, decision: entry.decision, reviewedRevision: entry.reviewedRevision, updatedAt: entry.updatedAt, item: entry.item, context: entry.context };
+      }
+      return restored;
+    }
+    function storageFailure(message) {
+      storageBlocked = true;
+      $("storage-warning").textContent = `${message} Download feedback before closing this page. Your current comments remain in memory only.`;
+      $("save-status").textContent = "Not saved in this browser.";
+    }
+    try {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const data = JSON.parse(saved);
+        entries = validateBackup(data);
+        overall = data.overall ?? "";
+        theme = data.theme ?? theme;
+      }
+      $("save-status").textContent = Object.values(entries).some(hasFeedback) || overall.trim() ? "Earlier feedback restored from this browser." : "No feedback yet. Comments save in this browser.";
+    } catch (error) {
+      storageFailure(`Cannot read saved feedback: ${error.message}`);
+    }
+    function bundle() {
+      return {
+        schemaVersion: 1, planId: plan.planId, revision: plan.revision, exportedAt: new Date().toISOString(), overall, theme,
+        context: { title: plan.title, summary: plan.summary, recommendation: plan.recommendation, scope: plan.scope, changes: plan.changes ?? "" },
+        entries: Object.values(entries).filter(hasFeedback).map(entry => ({ ...entry, currentItem: items.get(entry.id) ?? null, state: state(entry, items.get(entry.id)) }))
+      };
+    }
+    function readable() {
+      const data = bundle();
+      const describe = item => canonical({
+        ...item,
+        ...(item.image ? { image: { ...item.image, data: "(embedded image omitted; see the HTML or JSON backup)", ...(item.image.mobileData ? { mobileData: "(embedded mobile image omitted; see the HTML or JSON backup)" } : {}) } } : {}),
+        ...(item.previewFile ? { previewFile: { ...item.previewFile, html: "(rendered example omitted; see the HTML or JSON backup)" } } : {})
+      });
+      const lines = [`# ${plan.title}`, `Plan: ${plan.planId} | Revision: ${plan.revision}`, "", plan.summary, "", `Recommendation: ${plan.recommendation}`, `Scope: ${plan.scope}`];
+      if (plan.changes) lines.push(`Changes: ${plan.changes}`);
+      lines.push("", "Review preferences only. No execution authority.", "");
+      if (data.overall.trim()) lines.push("## Overall feedback", data.overall, "");
+      if (!data.entries.length && !data.overall.trim()) lines.push("No feedback recorded.");
+      for (const entry of data.entries) {
+        lines.push(`## ${entry.id}: ${entry.item.title}`, `State: ${entry.state} | Reviewed revision: ${entry.reviewedRevision}`, `Decision: ${decisions[entry.decision]}`, `Comment: ${entry.comment || "(none)"}`, `Reviewed item: ${describe(entry.item)}`);
+        if (entry.state === "changed") lines.push(`Current item: ${describe(entry.currentItem)}`, `Earlier plan context: ${canonical(entry.context)}`, "Earlier decision needs another review.");
+        lines.push("");
+      }
+      return lines.join("\n");
+    }
+    function updateSummary() {
+      let reviewed = 0;
+      let changed = 0;
+      let commented = 0;
+      for (const [id, item] of items) {
+        const entry = entries[id];
+        const article = $(id);
+        if (article) article.dataset.commented = String(Boolean(entry?.comment.trim()));
+        const status = $(`comment-${id}-status`);
+        if (status) status.textContent = hasFeedback(entry) ? storageBlocked ? "In memory only. Export before closing." : "Saved in this browser." : "";
+        if (entry?.comment.trim()) commented++;
+        if (hasFeedback(entry) && state(entry, item) === "changed") changed++;
+        if (entry && entry.decision !== "undecided" && state(entry, item) === "current") reviewed++;
+      }
+      $("review-count").textContent = `${commented} of ${items.size} commented${reviewed ? ` · ${reviewed} reviewed` : ""}${changed ? ` · ${changed} need another review` : ""}`;
+      $("feedback-text").value = readable();
+    }
+    function save() {
+      if (!storageBlocked) {
+        try {
+          localStorage.setItem(key, JSON.stringify(bundle()));
+          $("save-status").textContent = "Saved in this browser. Export feedback to share or back it up.";
+        } catch (error) { storageFailure(`Cannot save feedback: ${error.message}`); }
+      }
+      updateSummary();
+    }
+    function updateEntry(item, change, renew = false) {
+      const previous = entries[item.id];
+      entries[item.id] = {
+        id: item.id, comment: "", decision: "undecided",
+        ...previous, ...change,
+        item: renew || !previous ? item : previous.item,
+        context: renew || !previous ? reviewContext : previous.context,
+        reviewedRevision: renew || !previous ? plan.revision : previous.reviewedRevision,
+        updatedAt: new Date().toISOString()
+      };
+      save();
+    }
+    function list(parent, heading, values) {
+      if (!values?.length) return;
+      parent.append(element("h4", heading));
+      const ul = element("ul");
+      for (const value of values) ul.append(element("li", value));
+      parent.append(ul);
+    }
+    function renderItem(item) {
+      const article = element("article", undefined, "ex");
+      article.id = item.id;
+      article.dataset.exampleId = item.id;
+      article.setAttribute("aria-labelledby", `${item.id}-label`);
+      if (item.previewFile || item.image || item.preview) {
+        const stage = element("div", undefined, "ex-stage");
+        const stageLabel = element("div", undefined, "ex-strip");
+        stageLabel.append(element("span", item.previewFile?.label ?? item.image?.caption ?? "Illustrative technical sample"), element("span", item.id, "ex-strip__id"));
+        stage.append(stageLabel);
+        const canvas = element("div", undefined, "ex-canvas");
+        if (item.previewFile) {
+          const frame = element("iframe", undefined, "planning-preview");
+          frame.title = `${item.title}: ${item.previewFile.label}`;
+          frame.setAttribute("sandbox", "");
+          frame.srcdoc = item.previewFile.html;
+          frame.style.setProperty("--preview-height", `${item.previewFile.height}px`);
+          frame.style.setProperty("--preview-mobile-height", `${item.previewFile.mobileHeight}px`);
+          canvas.append(frame);
+        }
+        if (item.image) {
+          const figure = element("figure");
+          const picture = element("picture");
+          if (item.image.mobileData) {
+            const mobile = element("source");
+            mobile.media = "(max-width: 767px)";
+            mobile.srcset = item.image.mobileData;
+            picture.append(mobile);
+          }
+          const image = element("img");
+          image.src = item.image.data;
+          image.alt = item.image.alt;
+          picture.append(image);
+          figure.append(picture, element("figcaption", item.image.caption));
+          canvas.append(figure);
+        }
+        if (item.preview) canvas.append(element("pre", item.preview));
+        stage.append(canvas);
+        article.append(stage);
+      } else article.classList.add("ex--text");
+      const content = element("div", undefined, "ex-side");
+      const tags = element("div", undefined, "ex-meta");
+      tags.append(element("span", item.id, "ex-id"));
+      const kindStyle = item.kind === "fact" ? "current" : ["assumption", "question", "risk"].includes(item.kind) ? "hypothetical" : "proposed";
+      tags.append(element("span", item.kind, `tag tag--${kindStyle}`));
+      if (item.recommended) tags.append(element("span", "Recommended", "tag tag--proposed"));
+      const link = element("a", "Link", "g-fine");
+      link.href = `#${item.id}`;
+      link.setAttribute("aria-label", `Link to ${item.title}`);
+      tags.append(link);
+      const title = element("h3", item.title, "ex-label");
+      title.id = `${item.id}-label`;
+      content.append(tags, title, element("p", item.body, "ex-desc planning-text"));
+      if (item.dependsOn?.length) {
+        const dependencies = element("p", "Start after: ", "ex-desc");
+        item.dependsOn.forEach((id, index) => {
+          if (index) dependencies.append(document.createTextNode(", "));
+          const link = element("a", items.get(id).title);
+          link.href = `#${id}`;
+          dependencies.append(link);
+        });
+        content.append(dependencies);
+      }
+      if (item.criteria?.length || item.evidence?.length) {
+        const supporting = element("details", undefined, "planning-details");
+        supporting.append(element("summary", "Acceptance criteria and evidence"));
+        list(supporting, "Done when", item.criteria);
+        list(supporting, "Evidence", item.evidence);
+        content.append(supporting);
+      }
+      for (const detail of item.details ?? []) {
+        const details = element("details", undefined, "planning-details");
+        details.append(element("summary", detail.title), element("p", detail.body, "planning-text"));
+        content.append(details);
+      }
+      for (const reference of item.links ?? []) {
+        const paragraph = element("p");
+        const link = element("a", reference.label);
+        link.href = reference.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        paragraph.append(link);
+        content.append(paragraph);
+      }
+      const review = element("div", undefined, "ex-fb");
+      const entry = entries[item.id];
+      const changed = hasFeedback(entry) && state(entry, item) === "changed";
+      if (changed) {
+        review.append(element("p", `Review again. Your earlier decision refers to revision ${entry.reviewedRevision}.`, "g-warn notice"));
+        const earlier = element("details", undefined, "planning-details");
+        earlier.append(element("summary", "Read the earlier proposal"), element("p", entry.item.title), element("p", entry.item.body));
+        review.append(earlier);
+      }
+      const label = element("label", "Your decision");
+      label.htmlFor = `decision-${item.id}`;
+      const select = element("select");
+      select.id = label.htmlFor;
+      select.setAttribute("aria-label", `Decision for ${item.title}`);
+      for (const [value, text] of Object.entries(decisions)) {
+        const option = element("option", text);
+        option.value = value;
+        select.append(option);
+      }
+      select.value = entry?.decision ?? "undecided";
+      select.addEventListener("change", () => { updateEntry(item, { decision: select.value }, true); render(); });
+      const commentLabel = element("label", `Feedback on ${item.id}`);
+      commentLabel.htmlFor = `comment-${item.id}`;
+      const comment = element("textarea");
+      comment.id = commentLabel.htmlFor;
+      comment.dataset.feedbackId = item.id;
+      comment.rows = 3;
+      comment.setAttribute("aria-label", `Comments for ${item.title}`);
+      comment.placeholder = "What works, what does not, what is missing?";
+      comment.value = entry?.comment ?? "";
+      comment.addEventListener("input", () => updateEntry(item, { comment: comment.value }));
+      const decisionField = element("div", undefined, "planning-decision");
+      decisionField.append(label, select);
+      const status = element("span", undefined, "ex-fb__status");
+      status.id = `comment-${item.id}-status`;
+      status.setAttribute("aria-live", "polite");
+      review.append(commentLabel, comment, status, decisionField);
+      if (changed) {
+        const renew = element("button", "Keep decision for this revision", "g-btn");
+        renew.type = "button";
+        renew.addEventListener("click", () => { updateEntry(item, {}, true); render(); });
+        review.append(renew);
+      }
+      content.append(review);
+      article.append(content);
+      return article;
+    }
+    function render() {
+      const focus = document.activeElement?.id;
+      $("sections").replaceChildren();
+      for (const section of plan.sections) {
+        const node = element("section", undefined, "g-section");
+        node.id = section.id;
+        const head = element("div", undefined, "g-section__head");
+        head.append(element("h2", section.title), element("p", section.summary, "planning-text"));
+        node.append(head);
+        section.items.forEach(item => node.append(renderItem(item)));
+        $("sections").append(node);
+      }
+      $("history-items").replaceChildren();
+      const removed = Object.values(entries).filter(entry => hasFeedback(entry) && !items.has(entry.id));
+      $("history").hidden = !removed.length;
+      for (const entry of removed) {
+        const article = element("article", undefined, "g-box planning-history");
+        article.append(element("h3", `${entry.item.title} (${entry.id})`), element("p", entry.item.body), element("p", `Earlier decision: ${decisions[entry.decision]}`), element("p", `Comment: ${entry.comment || "(none)"}`));
+        $("history-items").append(article);
+      }
+      updateSummary();
+      if (focus?.startsWith("decision-")) $(focus)?.focus();
+    }
+    function download(name, text, mime) {
+      const url = URL.createObjectURL(new Blob([text], { type: mime }));
+      const link = element("a");
+      link.href = url;
+      link.download = name;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    function safelyDownload(name, text, mime) {
+      try {
+        download(name, text, mime);
+        $("action-status").textContent = "Download requested. Keep the file before closing this page.";
+      } catch (error) {
+        $("transfer").open = true;
+        $("action-status").textContent = `Download failed: ${error.message}. Copy the readable feedback below.`;
+      }
+    }
+    function applyTheme() {
+      document.documentElement.dataset.theme = theme;
+      for (const button of document.querySelectorAll("[data-theme-choice]")) button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
+    }
+    applyTheme();
+    for (const button of document.querySelectorAll("[data-theme-choice]")) button.addEventListener("click", () => {
+      theme = button.dataset.themeChoice;
+      applyTheme();
+      save();
+    });
+    $("overall").value = overall;
+    $("overall").addEventListener("input", () => { overall = $("overall").value; save(); });
+    document.title = `${plan.title} · Plan review`;
+    $("plan-meta").textContent = `${plan.planId}\nRevision ${plan.revision}`;
+    for (const section of [...plan.sections, { id: "overall-section", title: "Overall feedback" }, { id: "exports", title: "Export" }]) {
+      const link = element("a", section.title);
+      link.href = `#${section.id}`;
+      $("navigation").append(link);
+    }
+    $("overview").append(element("p", "Design and engineering review gallery", "g-kicker"), element("h1", plan.title), element("p", plan.summary, "g-lede planning-text"));
+    const facts = $("plan-details");
+    facts.append(element("h3", "Recommended approach"), element("p", plan.recommendation, "planning-text"), element("h3", "Scope"), element("p", plan.scope, "planning-text"));
+    if (plan.changes) facts.append(element("h3", "What changed"), element("p", plan.changes));
+    async function copyFeedback() {
+      const text = readable();
+      try {
+        await navigator.clipboard.writeText(text);
+        $("action-status").textContent = "Feedback copied. Paste it into the conversation.";
+        $("copy-status").textContent = "Feedback copied.";
+        $("copy-status").dataset.kind = "ok";
+        $("action-status").dataset.kind = "ok";
+      } catch (error) {
+        $("transfer").open = true;
+        $("feedback-text").value = text;
+        $("feedback-text").focus();
+        $("feedback-text").select();
+        $("action-status").textContent = "Clipboard access failed. Copy the selected feedback below, or download a backup.";
+        $("copy-status").textContent = "Clipboard blocked. Use Export.";
+        $("copy-status").dataset.kind = "warn";
+        $("action-status").dataset.kind = "warn";
+      }
+    }
+    $("copy").addEventListener("click", copyFeedback);
+    $("copy-2").addEventListener("click", copyFeedback);
+    $("download").addEventListener("click", () => safelyDownload(`${plan.planId}-feedback-r${plan.revision}.json`, JSON.stringify(bundle(), null, 2), "application/json"));
+    $("plan-download").addEventListener("click", () => safelyDownload(`${plan.planId}-r${plan.revision}.md`, [
+      `# ${plan.title}`, `Plan: ${plan.planId} | Revision: ${plan.revision}`, "", plan.summary, "", `Recommendation: ${plan.recommendation}`, `Scope: ${plan.scope}`, plan.changes ? `Changes: ${plan.changes}` : "",
+      ...plan.sections.flatMap(section => [`\n## ${section.title}`, section.summary, ...section.items.flatMap(item => [
+        `\n### ${item.title} (${item.id})`, `Kind: ${item.kind}${item.recommended ? " | Recommended" : ""}`, item.body,
+        item.dependsOn?.length ? `Start after: ${item.dependsOn.join(", ")}` : "", item.preview ? `Approximate layout:\n${item.preview}` : "",
+        ...(item.criteria ?? []).map(text => `Done when: ${text}`), ...(item.evidence ?? []).map(text => `Evidence: ${text}`),
+        ...(item.details ?? []).map(detail => `${detail.title}: ${detail.body}`), ...(item.links ?? []).map(link => `${link.label}: ${link.url}`),
+        item.previewFile ? `Rendered example: ${item.previewFile.label}\nOpen the review HTML to see this example.` : "",
+        item.image ? `Image: ${item.image.alt}\nCaption: ${item.image.caption}\nThe review HTML contains the image.` : ""
+      ])])
+    ].filter(line => line !== "").join("\n\n"), "text/markdown"));
+    $("restore").addEventListener("change", async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const data = JSON.parse(await file.text());
+        const restored = validateBackup(data);
+        if ((Object.values(entries).some(hasFeedback) || overall.trim()) && !window.confirm("Replace the feedback currently shown in this page with this backup? Download the current feedback first if you need to keep it.")) return;
+        entries = restored;
+        overall = data.overall ?? "";
+        theme = data.theme ?? plan.theme ?? "dark";
+        $("overall").value = overall;
+        applyTheme();
+        save();
+        render();
+        $("action-status").textContent = storageBlocked ? "Backup restored in memory only. Download feedback before closing." : "Feedback restored. Changed proposals still need another review.";
+      } catch (error) { $("action-status").textContent = `Cannot restore feedback: ${error.message}`; }
+      finally { event.target.value = ""; }
+    });
+    window.addEventListener("storage", event => {
+      if (event.key === key || event.key === null) {
+        storageFailure("Another tab changed saved feedback. This tab will not overwrite that copy. Export both copies before restoring one.");
+        updateSummary();
+      }
+    });
+    render();
+    if (location.hash) $(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
+  </script>
+</body>
+</html>

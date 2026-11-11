@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "planId": "example-project-picker",
+  "revision": 1,
+  "theme": "dark",
+  "title": "Choose a project with less searching",
+  "summary": "Compare the proposed picker states. Each example is a static HTML recreation with its own feedback field.",
+  "recommendation": "Use a searchable list with a clear selected row. Keep feedback beside each proposed state.",
+  "scope": "This example reviews layout and messages. It does not implement a project picker or claim current product behavior.",
+  "sections": [
+    {
+      "id": "proposed-states",
+      "title": "Review the proposed states",
+      "summary": "Review the layout and messages at full size. These are proposed states, not screenshots of an existing product.",
+      "items": [
+        {
+          "id": "picker-ready",
+          "kind": "design",
+          "title": "Recent projects stay visible",
+          "body": "Show recent projects before the first search. Keep the selected project clear without relying on color alone.",
+          "recommended": true,
+          "previewFile": {"path": "previews/picker-ready.html", "label": "Proposed state - static HTML recreation", "height": 520},
+          "criteria": ["Keyboard users can move between projects.", "The selected row includes a text label."],
+          "details": [{"title": "Interaction", "body": "Keep focus in the search field while filtering. Announce the result count without moving focus."}]
+        },
+        {
+          "id": "picker-empty",
+          "kind": "design",
+          "title": "Explain an empty search",
+          "body": "Keep the query visible. Offer a clear way to try another search.",
+          "previewFile": {"path": "previews/picker-empty.html", "label": "Proposed empty search - static HTML recreation", "height": 430},
+          "criteria": ["The query remains visible.", "Clear search returns to recent projects."]
+        },
+        {
+          "id": "picker-loading",
+          "kind": "design",
+          "title": "Show that results are loading",
+          "body": "Keep the search field available. Announce that the project list is loading.",
+          "previewFile": {"path": "previews/picker-loading.html", "label": "Proposed loading state - static HTML recreation", "height": 430}
+        },
+        {
+          "id": "picker-error",
+          "kind": "design",
+          "title": "Give a failed request a next step",
+          "body": "Explain that the request failed. Preserve the search and let the user retry.",
+          "previewFile": {"path": "previews/picker-error.html", "label": "Proposed failed request - static HTML recreation", "height": 430},
+          "criteria": ["Retry preserves the query.", "The page does not display a failed request as an empty result."]
+        }
+      ]
+    },
+    {
+      "id": "design-decisions",
+      "title": "Resolve before implementation",
+      "summary": "Record the decision that changes which projects the picker can show.",
+      "items": [
+        {
+          "id": "picker-permissions",
+          "kind": "question",
+          "title": "Which projects can the user see?",
+          "body": "Use the existing permission owner. Establish whether unavailable projects are hidden or shown with an explanation.",
+          "details": [{"title": "Evidence needed", "body": "Read the current permission contract before choosing a display rule. This example does not propose changing access."}]
+        }
+      ]
+    }
+  ]
+}

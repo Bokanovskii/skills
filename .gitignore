@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.*
+*.key
+*.pem
+*.log
+node_modules/
+playwright-report/
+test-results/
+/artifacts/

@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Proposed loading state</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:30px;background:#0d1016;color:#e9e9ef;font:15px/1.5 system-ui,sans-serif}.picker{max-width:660px;margin:auto;border:1px solid #343743;border-radius:14px;background:#13161e;overflow:hidden}.head{padding:20px 24px;border-bottom:1px solid #30333f;font-size:20px;font-weight:650}.content{padding:20px 24px}.search{color:#a1a5b2;background:#0d1016;border:1px solid #494d5c;border-radius:9px;padding:12px 14px}.status{display:flex;align-items:center;gap:12px;margin:24px 0 10px;color:#bbc0cd;font-size:14px}.spinner{width:18px;height:18px;border:2px solid #3c4353;border-top-color:#a1b5df;border-radius:50%}.placeholder{height:36px;border-radius:7px;background:#1c202b;margin:10px 0}.placeholder:nth-last-child(1){width:68%}.note{font-size:12px;color:#a1a5b2;margin-top:18px}@media(max-width:500px){body{padding:18px}.head,.content{padding:16px}}
+</style></head><body>
+<div class="picker"><div class="head">Open a project</div><div class="content">
+<div class="search">Search projects...</div>
+<div class="status"><span class="spinner" aria-hidden="true"></span>Loading projects...</div>
+<div aria-hidden="true"><div class="placeholder"></div><div class="placeholder"></div></div>
+<div class="note">Keep typing to refine your search.</div>
+</div></div>
+</body></html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Proposed search update flow</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:36px;background:#0d1016;color:#e9e9ef;font:15px/1.5 system-ui,sans-serif}.diagram{max-width:1000px;margin:auto}.caption{font-size:13px;color:#a1a5b2;margin-bottom:22px}.flow{display:flex;align-items:center;gap:18px}.node{flex:1;padding:24px 20px;border:1px solid #3b4050;border-radius:12px;background:#151923;min-width:0}.node.owner{border-color:#58749d;background:#1b273b}.node strong{display:block;font-size:18px;margin:0 0 8px}.node p{margin:0;color:#aeb8cc;font-size:13px}.arrow{color:#7a8aa8;font-size:24px}.contract{display:flex;gap:12px;flex-wrap:wrap;border-top:1px solid #30333f;margin-top:26px;padding-top:20px}.contract span{font-size:13px;color:#c3cede;padding:7px 12px;border:1px solid #343e51;border-radius:6px}.note{font-size:13px;color:#a1a5b2;margin-top:20px}@media(max-width:600px){body{padding:22px}.flow{flex-direction:column;gap:10px;align-items:stretch}.node{padding:14px}.arrow{text-align:center;font-size:18px}.arrow::after{content:" next"}}
+</style></head><body>
+<div class="diagram">
+<div class="caption">Proposed flow. Synthetic engineering example.</div>
+<div class="flow">
+  <div class="node"><strong>Document changes</strong><p>Create, edit, or delete through the existing update path.</p></div>
+  <span class="arrow" aria-label="then">&rarr;</span>
+  <div class="node owner"><strong>Existing index writer</strong><p>One owner orders updates and records failures.</p></div>
+  <span class="arrow" aria-label="then">&rarr;</span>
+  <div class="node"><strong>Search index</strong><p>Apply the change. Keep the query interface unchanged.</p></div>
+</div>
+<div class="contract"><span>One writer</span><span>Ordered changes</span><span>Visible failures</span><span>Existing rebuild for recovery</span></div>
+<p class="note">Review the ownership and recovery path before implementation. This diagram does not claim measured performance.</p>
+</div>
+</body></html>

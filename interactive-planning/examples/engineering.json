@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "planId": "example-search-index",
+  "revision": 1,
+  "title": "Make project search faster",
+  "summary": "Example proposal. Keep search results current without rebuilding the full index after each edit.",
+  "recommendation": "Let the existing search owner update only changed documents. Keep the current query interface.",
+  "scope": "This example covers indexing, recovery, and proof. It excludes ranking changes and a new search service.",
+  "sections": [
+    {
+      "id": "approach",
+      "title": "Choose the approach",
+      "summary": "Review the proposed owner and the assumption that needs evidence.",
+      "items": [
+        {
+          "id": "incremental-index",
+          "kind": "decision",
+          "title": "Update only changed documents",
+          "body": "Keep one index writer. Give it document changes from the existing update path.",
+          "recommended": true,
+          "previewFile": {"path": "previews/search-flow.html", "label": "Proposed architecture - synthetic example", "height": 480, "mobileHeight": 1000},
+          "details": [
+            {"title": "Why this approach", "body": "One writer keeps updates ordered. Reusing the existing search owner avoids a second source of truth."},
+            {"title": "Alternative", "body": "Keep full rebuilds if measurements show that the extra complexity brings no useful improvement."}
+          ],
+          "criteria": ["New, changed, and deleted documents produce the expected search results."]
+        },
+        {
+          "id": "measure-current-cost",
+          "kind": "assumption",
+          "title": "Measure the current rebuild cost",
+          "body": "The example assumes that full rebuilds cause the delay. Measure that path before implementing this proposal.",
+          "evidence": ["Synthetic example. No repository measurements support this assumption yet."]
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "Build and prove the change",
+      "summary": "Keep the work ordered. Prove behavior at the search entry point before rollout.",
+      "items": [
+        {
+          "id": "wire-updates",
+          "kind": "step",
+          "title": "Connect edits to the existing index writer",
+          "body": "Add document updates and removals to the current writer. Do not add a competing write path.",
+          "dependsOn": ["incremental-index", "measure-current-cost"],
+          "criteria": ["Updates remain ordered.", "Deleted documents disappear from results.", "A failed update reports its cause."]
+        },
+        {
+          "id": "prove-recovery",
+          "kind": "step",
+          "title": "Prove recovery before rollout",
+          "body": "Exercise edits, deletions, restart, and a failed update through the public search flow.",
+          "dependsOn": ["wire-updates"],
+          "details": [
+            {"title": "Recovery", "body": "If incremental updates fail, keep existing search reads available. Use the existing rebuild operation to recover the index."},
+            {"title": "Rollout", "body": "Compare the measured update cost and result correctness with the current path. Do not claim a speed improvement without measurements."}
+          ],
+          "criteria": ["The search flow returns expected results after restart.", "Recovery does not alter source documents."]
+        }
+      ]
+    }
+  ]
+}
