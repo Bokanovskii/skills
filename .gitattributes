@@ -1,0 +1,2 @@
+# The Windows launcher requires CRLF for cmd.exe label offsets.
+impeccable/scripts/impeccable.cmd text eol=crlf
