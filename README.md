@@ -19,7 +19,7 @@ Install Git and the GitHub CLI before running the clone command.
 If `~/.copilot/skills` does not exist, clone this repository into that location:
 
 ```bash
-gh repo clone Bokanovskii/copilot-skills "$HOME/.copilot/skills"
+gh repo clone Bokanovskii/skills "$HOME/.copilot/skills"
 ```
 
 If that directory already contains skills, preserve them before combining the two collections.
