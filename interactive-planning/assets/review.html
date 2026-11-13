@@ -2,7 +2,7 @@
 <!--
 Base: the original Streaming inline widgets gallery produced with control-ui-e2e.
 Its first stylesheet is preserved in control-ui-gallery.css.
-Planning additions are isolated below. See references/template-origin.md.
+Planning additions are isolated in the second style block. See references/template-origin.md.
 -->
 <html lang="en" data-theme="dark">
 <head>
@@ -18,471 +18,1079 @@ Planning additions are isolated below. See references/template-origin.md.
   </style>
   <style>
     /* Planning additions. The original gallery rules above stay unchanged. */
+    [hidden] { display: none !important; }
     a:not(.g-btn) { color: var(--info); }
     .g-nav a { color: var(--muted); }
-    .planning-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-    .planning-details { font-size: 12.5px; }
-    .planning-details summary { cursor: pointer; color: var(--text-strong); }
-    .planning-details h3, .planning-details h4 { font-size: 13px; color: var(--text-strong); }
-    .planning-details ul { padding-left: 20px; }
-    .planning-decision { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 4px; }
-    .planning-decision select { max-width: 100%; border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 8px; background: var(--bg); color: var(--text-strong); font: inherit; font-size: 12px; }
-    .planning-preview { display: block; width: 100%; height: var(--preview-height); border: 0; }
-    .ex--text .ex-side { grid-column: 1 / -1; }
+    .ip-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .ip-intro p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.55; }
+    .ip-intro p:last-child { margin-bottom: 0; }
+    .ip-label { display: block; margin-bottom: 2px; font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .ip-term { border: 0; border-bottom: 1px dotted var(--info); padding: 0; background: none; font: inherit; color: var(--text-strong); cursor: help; }
+    .ip-tip { display: inline-block; max-width: 420px; margin: 2px 0 2px 6px; padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--bg-elevated); box-shadow: var(--shadow); font-size: 12px; line-height: 1.5; color: var(--text); white-space: normal; }
+    .g-box .ip-input { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+    .ip-input li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); font-size: 13px; }
+    .ip-input a { min-width: 0; color: var(--text-strong); text-decoration: none; overflow-wrap: anywhere; }
+    .ip-input a:hover { text-decoration: underline; }
+    .ip-chip { flex: none; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .ip-chip--need { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 50%, transparent); background: var(--warn-subtle); }
+    .ip-chip--done { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); background: var(--ok-subtle); }
+    .ip-chip--upd { color: var(--info); border-color: color-mix(in srgb, var(--info) 50%, transparent); background: var(--info-subtle); }
+    .ip-chip--bad { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: var(--danger-subtle); }
+    .ip-progress { height: 6px; margin-top: 12px; overflow: hidden; border-radius: 999px; background: var(--bg-muted); }
+    .ip-progress span { display: block; height: 100%; background: var(--primary); }
+    .ip-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+    .ip-card { min-width: 0; margin-top: 14px; padding: 18px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--panel); overflow-wrap: anywhere; scroll-margin-top: 64px; }
+    .ip-card--note { border-left: 3px solid var(--info); }
+    .ip-card h3 { margin: 8px 0 6px; font-size: 16px; line-height: 1.35; color: var(--text-strong); }
+    .ip-card p { margin: 0 0 10px; font-size: 13.5px; line-height: 1.55; }
+    .ip-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .ip-kind { font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .ip-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+    .ip-choice { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-content: start; padding: 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--bg); font-size: 12.5px; line-height: 1.5; cursor: pointer; }
+    .ip-choice:hover { border-color: var(--muted); }
+    .ip-choice.is-on { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary) inset; background: var(--accent-subtle); }
+    .ip-choice input { margin: 3px 0 0; accent-color: var(--primary); }
+    .ip-choice b { display: block; color: var(--text-strong); font-size: 13px; }
+    .ip-choice p { margin: 4px 0 0; font-size: 12.5px; }
+    .ip-rec { display: block; font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--accent); }
+    .ip-cons { color: var(--muted); }
+    .ip-field { display: grid; gap: 6px; margin-top: 10px; }
+    .ip-field label { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .ip-field textarea, .ip-field select { width: 100%; border: 1px solid var(--border-strong); border-radius: 8px; padding: 8px 10px; background: var(--bg); color: var(--text-strong); font: inherit; font-size: 13px; line-height: 1.45; }
+    .ip-field textarea { min-height: 64px; resize: vertical; }
+    .ip-field select { width: auto; max-width: 100%; }
+    .ip-settled { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-size: 13px; }
+    .ip-settled span { flex: 1; min-width: 0; color: var(--text-strong); }
+    .ip-seg { display: inline-flex; flex-wrap: wrap; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 8px; }
+    .ip-seg button { border: 0; border-left: 1px solid var(--border-strong); padding: 7px 14px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .ip-seg button:first-child { border-left: 0; }
+    .ip-seg button[aria-checked="true"] { background: var(--bg-hover); color: var(--text-strong); box-shadow: inset 0 -2px 0 var(--primary); }
+    .ip-okay { display: grid; gap: 0; margin: 10px 0 14px; padding: 0; list-style: none; }
+    .ip-okay li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 13px; }
+    .ip-okay li p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+    .ip-okay b { color: var(--text-strong); }
+    .ip-switch { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--text-strong); cursor: pointer; }
+    .ip-switch input { width: 16px; height: 16px; accent-color: var(--primary); }
+    .ip-steps { margin: 10px 0 0; padding: 0; list-style: none; }
+    .ip-step { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 6px 10px; align-items: start; padding: 10px 4px; border-top: 1px solid var(--border); scroll-margin-top: 64px; }
+    .ip-step:first-child { border-top: 0; }
+    .ip-num { display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--border-strong); border-radius: 50%; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+    .ip-num--done { border-color: var(--ok); background: var(--ok-subtle); color: var(--ok); }
+    .ip-step b { font-size: 13.5px; color: var(--text-strong); }
+    .ip-step p { margin: 3px 0 0; font-size: 12.5px; }
+    .ip-meta { margin-top: 4px; font-size: 11.5px; color: var(--muted); }
+    .ip-side { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px; }
+    .ip-step > .ip-thread-wrap { grid-column: 2 / -1; }
+    .ip-cbtn { border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; background: transparent; color: var(--muted); font: inherit; font-size: 11.5px; white-space: nowrap; cursor: pointer; }
+    .ip-cbtn:hover { border-color: var(--border-strong); color: var(--text-strong); }
+    .ip-cbtn--has { border-color: var(--border-strong); color: var(--text-strong); }
+    .ip-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+    .ip-thread-wrap { display: grid; gap: 8px; }
+    .ip-thread-wrap:not(:empty) { margin-top: 10px; }
+    .ip-thread-wrap:empty { display: none; }
+    .ip-thread { display: grid; gap: 8px; padding-left: 12px; border-left: 2px solid var(--border-strong); font-size: 12.5px; }
+    .ip-thread--open { border-left-color: var(--accent); }
+    .ip-thread summary { cursor: pointer; color: var(--muted); }
+    .ip-thread summary b { color: var(--ok); font-weight: 600; }
+    .ip-thread[open] summary { margin-bottom: 8px; }
+    .ip-thread .ip-msg { margin: 0; font-size: 12.5px; line-height: 1.5; }
+    .ip-who { display: block; font-size: 11px; color: var(--muted); }
+    .ip-msg--agent .ip-who { color: var(--info); }
+    .ip-compose { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--bg); }
+    .ip-compose .ip-field { margin: 0; }
+    .ip-card .g-fine { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
+    .ip-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .ip-facts { display: grid; grid-template-columns: 170px minmax(0, 1fr); margin: 8px 0 0; font-size: 13px; }
+    .ip-facts dt, .ip-facts dd { margin: 0; padding: 8px 0; border-top: 1px solid var(--border); }
+    .ip-facts dt { padding-right: 12px; color: var(--text-strong); }
+    .ip-risk { padding: 10px 0; border-top: 1px solid var(--border); }
+    .ip-risk b { color: var(--text-strong); font-size: 13.5px; }
+    .ip-risk p { margin: 4px 0 0; font-size: 13px; }
+    .ip-table-wrap { overflow-x: auto; margin-top: 8px; }
+    .ip-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ip-table th, .ip-table td { padding: 8px 10px; border-top: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .ip-table thead th { border-top: 0; font-size: 12px; color: var(--muted); }
+    .ip-table tbody th { color: var(--text-strong); }
+    .ip-code { overflow: auto; margin: 8px 0 0; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.5; }
+    .ip-more { margin-top: 8px; font-size: 12.5px; }
+    .ip-more summary { cursor: pointer; color: var(--muted); }
+    .ip-more h4 { margin: 10px 0 4px; font-size: 12.5px; color: var(--text-strong); }
+    .ip-more p, .ip-more li { font-size: 12.5px; }
+    .ip-more ul { margin: 0; padding-left: 20px; }
+    .ip-diff { margin-top: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .ip-diff del { color: var(--danger); background: var(--danger-subtle); }
+    .ip-diff ins { color: var(--ok); background: var(--ok-subtle); text-decoration: none; }
+    .ip-collapsed { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 10px 14px; border: 1px dashed var(--border-strong); border-radius: 12px; font-size: 13px; color: var(--muted); }
+    .ip-preview { display: block; width: 100%; height: var(--h); border: 0; }
+    .ex-canvas.ip-flush { padding: 0; }
     .ex-canvas figure { margin: 0; }
-    .ex-canvas img { max-width: 100%; height: auto; }
-    .ex-canvas figcaption { color: var(--muted); font-size: 12px; }
-    .ex-canvas pre { overflow: auto; font-family: var(--mono); white-space: pre-wrap; }
-    .planning-history { margin-top: 16px; }
-    .planning-controls { margin-top: 14px; }
-    .planning-note:empty { display: none; }
-    [hidden] { display: none !important; }
-    @media (max-width: 767px) { .planning-preview { height: var(--preview-mobile-height); } }
-    @media print { .g-bar, .ex-fb, #exports { display: none; } main { padding: 0; } }
+    .ex-canvas img { display: block; max-width: 100%; height: auto; }
+    .ex-canvas figcaption { margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .ip-warn-inline { margin: 8px 0; color: var(--warn); font-size: 12.5px; }
+    @media (max-width: 767px) {
+      .ip-seg { display: flex; flex-direction: column; }
+      .ip-seg button { border-left: 0; border-top: 1px solid var(--border-strong); padding: 10px 14px; text-align: left; }
+      .ip-seg button:first-child { border-top: 0; }
+      .ip-choices { grid-template-columns: 1fr; }
+      .ip-facts { grid-template-columns: 1fr; }
+      .ip-facts dd { padding-top: 0; border-top: 0; }
+      .ip-step { grid-template-columns: 30px minmax(0, 1fr); }
+      .ip-step > .ip-side { grid-column: 2; justify-content: flex-start; }
+      .ip-okay li { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .ip-tip { display: block; margin: 6px 0 0; }
+      .ip-preview { height: var(--mh); }
+      .ip-card { padding: 16px 14px; }
+    }
   </style>
 </head>
 <body>
-  <a class="g-skip" href="#sections">Skip to the examples</a>
+  <a class="g-skip" href="#ip-input">Skip to your input</a>
   <header class="g-bar">
     <div class="g-bar__in">
-      <nav id="navigation" class="g-nav" aria-label="Gallery sections"></nav>
-      <span id="review-count" class="g-count"></span>
-      <span id="copy-status" class="g-copy-status" role="status" aria-live="polite"></span>
-      <button id="copy" class="g-btn g-btn--primary" type="button">Copy feedback</button>
+      <nav id="ip-nav" class="g-nav" aria-label="Plan sections"></nav>
+      <span id="ip-count" class="g-count"></span>
+      <span id="ip-copy-status" class="g-copy-status" role="status" aria-live="polite"></span>
+      <button id="ip-copy" class="g-btn g-btn--primary" type="button">Copy feedback</button>
     </div>
-    </header>
-    <main id="content">
-      <div class="g-hero">
-        <div id="overview"></div>
-        <div class="g-theme" role="group" aria-label="Gallery theme">
-          <span class="g-theme__label">Theme</span>
-          <button type="button" data-theme-choice="dark" aria-pressed="true">Dark</button>
-          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+  </header>
+  <main id="content">
+    <div class="g-hero">
+      <div id="ip-overview"></div>
+      <div class="g-theme" role="group" aria-label="Page theme">
+        <span class="g-theme__label">Theme</span>
+        <button type="button" data-theme-choice="dark" aria-pressed="true">Dark</button>
+        <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      </div>
+    </div>
+    <div class="g-banner" role="note">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <div><strong>How approval works.</strong> Approval lets the agent carry out the whole plan without asking again. It still stops for actions you have not okayed and for host permission prompts.</div>
+    </div>
+    <div id="ip-storage" class="g-warn" role="status" hidden></div>
+    <div id="ip-reset" class="g-warn" role="status" hidden></div>
+    <div class="g-intro">
+      <section class="g-box ip-intro" id="ip-plan-box" aria-labelledby="ip-plan-box-title"><h2 id="ip-plan-box-title">Recommendation and scope</h2></section>
+      <section class="g-box" id="ip-input" tabindex="-1" aria-labelledby="ip-input-title">
+        <h2 id="ip-input-title">Your input</h2>
+        <p class="g-fine" id="ip-input-lede" style="margin-top:0"></p>
+        <ul class="ip-input" id="ip-input-list"></ul>
+        <div class="ip-progress" aria-hidden="true"><span id="ip-progress"></span></div>
+        <div class="ip-tools">
+          <span id="ip-replies"></span>
+          <button id="ip-full" class="g-btn g-btn--quiet" type="button" hidden></button>
         </div>
-      </div>
-      <div class="g-banner" role="note">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-        <div><strong>Planning review only.</strong> Example labels distinguish evidence from proposed or static behavior. A review decision does not authorize implementation.</div>
-      </div>
-      <div id="storage-warning" class="g-warn planning-note" role="status"></div>
-      <div class="g-intro">
-        <section class="g-box planning-details" id="plan-details"><h2>Recommendation and scope</h2></section>
-        <section class="g-box"><h2>How to review</h2>
-          <ul><li>Compare examples and comment using their stable IDs.</li><li>Comments save only in this browser.</li><li>Use Copy feedback to return comments to the conversation.</li></ul>
-          <p class="g-fine">Theme changes the gallery. Static previews keep their authored colors.</p>
-        </section>
-      </div>
-      <p id="plan-meta" class="g-fine planning-text"></p>
-      <p id="save-status" class="g-fine" role="status" aria-live="polite"></p>
-      <div id="sections" tabindex="-1"></div>
-      <section id="history" class="g-section" hidden><div class="g-section__head"><h2>Removed items with feedback</h2><p>These comments refer to an earlier proposal. They remain in your exports.</p></div><div id="history-items"></div></section>
-      <section class="g-section" id="overall-section">
-        <div class="g-section__head"><h2>Overall feedback</h2><p>Record the overall direction or anything that the examples miss.</p></div>
-        <div class="g-box g-field planning-controls">
-          <label for="overall">Overall feedback</label>
-          <textarea id="overall" rows="6" placeholder="Overall direction, open questions, anything missing..."></textarea>
-        </div>
+        <p class="g-fine" id="ip-save-status" role="status" aria-live="polite"></p>
       </section>
-      <section id="exports" class="g-section g-export">
-        <div class="g-section__head"><h2>Export feedback</h2><p>The text below updates as you type. It keeps item IDs, labels, comments, and review revisions together.</p></div>
-        <div class="g-export__row">
-          <button id="copy-2" class="g-btn g-btn--primary" type="button">Copy feedback</button>
-          <button id="download" class="g-btn g-btn--quiet" type="button">Download feedback</button>
-          <button id="plan-download" class="g-btn g-btn--quiet" type="button">Download plan</button>
-          <span id="action-status" class="g-export__status" role="status" aria-live="polite"></span>
-        </div>
-        <div class="g-field">
-          <label for="feedback-text">Feedback as Markdown</label>
-          <textarea id="feedback-text" readonly spellcheck="false"></textarea>
-        </div>
-        <details id="transfer" class="planning-details planning-controls"><summary>Restore a feedback backup</summary>
-          <p>Restore feedback for this plan from a downloaded JSON backup. This replaces existing feedback after confirmation.</p>
-          <label for="restore">Restore feedback</label><input id="restore" type="file" accept=".json,application/json">
-        </details>
-      </section>
-      <footer class="g-foot"><p>Feedback stays in this browser until you export it. This page does not authorize implementation, commits, publication, or deployment.</p></footer>
-    </main>
-  <noscript>This review page needs JavaScript. Enable it in a trusted local browser, or read the accompanying plan JSON.</noscript>
+    </div>
+    <div id="ip-sections"></div>
+    <section class="g-section" id="ip-approval" aria-labelledby="ip-approval-title">
+      <div class="g-section__head"><h2 id="ip-approval-title">Approval</h2><p>Choose one. Your choice and your okay toggles go into the copied feedback.</p></div>
+      <div class="ip-card" id="ip-approval-card"></div>
+    </section>
+    <section class="g-section" id="ip-history" hidden aria-labelledby="ip-history-title">
+      <div class="g-section__head"><h2 id="ip-history-title">Removed parts with your comments</h2><p>These comments refer to parts that are no longer in the plan. Open comments stay in your feedback.</p></div>
+      <div id="ip-history-items"></div>
+    </section>
+    <section class="g-section" id="ip-overall-section" aria-labelledby="ip-overall-title">
+      <div class="g-section__head"><h2 id="ip-overall-title">Anything else</h2><p>Write about the overall direction or anything that the plan misses.</p></div>
+      <div class="g-box g-field" style="margin-top:14px">
+        <label for="ip-overall">Overall note</label>
+        <textarea id="ip-overall" rows="4" placeholder="Overall direction, open questions, anything missing"></textarea>
+      </div>
+    </section>
+    <section class="g-section g-export" id="ip-export" aria-labelledby="ip-export-title">
+      <div class="g-section__head"><h2 id="ip-export-title">Send feedback</h2><p>The text below lists only your input. It updates as you work. Paste it into the conversation.</p></div>
+      <div class="g-export__row">
+        <button id="ip-copy-2" class="g-btn g-btn--primary" type="button">Copy feedback</button>
+        <button id="ip-download" class="g-btn g-btn--quiet" type="button">Download backup</button>
+        <button id="ip-plan-download" class="g-btn g-btn--quiet" type="button">Download plan</button>
+        <span id="ip-action-status" class="g-export__status" role="status" aria-live="polite"></span>
+      </div>
+      <div class="g-field">
+        <label for="ip-feedback">Feedback to paste</label>
+        <textarea id="ip-feedback" readonly spellcheck="false" style="min-height:180px"></textarea>
+      </div>
+      <details class="ip-more" id="ip-transfer"><summary>Restore a backup</summary>
+        <p>Choose a backup file for this plan. The page asks before it replaces your current input.</p>
+        <label for="ip-restore">Backup file</label> <input id="ip-restore" type="file" accept=".json,application/json">
+      </details>
+    </section>
+    <footer class="g-foot"><p>Your input stays in this browser until you copy or download it.</p></footer>
+  </main>
+  <noscript>This review page needs JavaScript. Enable it in a trusted local browser, or read the plan JSON.</noscript>
+  <script type="application/json" id="ip-plan">/*__PLAN__*/</script>
   <script>
     "use strict";
-    const plan = /*__PLAN__*/;
-    const decisions = { undecided: "Not reviewed", accept: "Accept", changes: "Request changes", discuss: "Discuss" };
-    const key = `interactive-planning:v1:${plan.planId}`;
-    const items = new Map(plan.sections.flatMap(section => section.items.map(item => [item.id, item])));
-    const reviewContext = { title: plan.title, summary: plan.summary, recommendation: plan.recommendation, scope: plan.scope };
-    let entries = Object.create(null);
-    let overall = "";
-    let theme = plan.theme ?? "dark";
-    let storageBlocked = false;
+    const plan = JSON.parse(document.getElementById("ip-plan").textContent);
     const $ = id => document.getElementById(id);
-    const canonical = value => JSON.stringify(value, (name, entry) =>
-      entry && typeof entry === "object" && !Array.isArray(entry)
-        ? Object.fromEntries(Object.keys(entry).sort().map(key => [key, entry[key]])) : entry);
-    const hasFeedback = entry => entry && (entry.comment !== "" || entry.decision !== "undecided");
-    function state(entry, item) { return !item ? "removed" : canonical(entry.item) === canonical(item) && canonical(entry.context) === canonical(reviewContext) ? "current" : "changed"; }
+    const storageKey = `interactive-planning:v2:${plan.planId}`;
+    const commentPattern = /^([a-z][a-z0-9-]{0,63})\.([1-9][0-9]{0,3})$/;
+    const tags = { "": "Comment", question: "Question", change: "Change request", remove: "Remove this" };
+    const approvalLabels = { approve: "Approve plan", changes: "Approve after changes", "not-yet": "Not yet" };
+    const statusLabels = { todo: ["Not started", ""], working: ["In progress", "upd"], done: ["Done", "done"], blocked: ["Blocked", "bad"] };
+    const replyLabels = { answered: "Agent answered", changed: "Agent changed the plan", "not-changed": "Agent kept the plan" };
+    const kinds = { design: "Design proposal", engineering: "Engineering plan", mixed: "Plan" };
+    const typeLabels = { facts: "Facts", steps: "Steps", risks: "Risks", comparison: "Comparison", code: "Code", note: "Note", decision: "Decision", question: "Question" };
+
+    const blocks = new Map();
+    const steps = new Map();
+    const stepPlace = new Map();
+    for (const section of plan.sections) {
+      for (const block of section.blocks) {
+        blocks.set(block.id, block);
+        if (block.type === "steps") block.items.forEach((step, index) => { steps.set(step.id, step); stepPlace.set(step.id, { block, number: index + 1 }); });
+      }
+    }
+    const units = new Set([...blocks.keys(), ...steps.keys()]);
+    const okayList = plan.approval?.okay ?? [];
+    const replies = new Map((plan.replies ?? []).map(reply => [reply.to, reply]));
+    const removedById = new Map((plan._removed ?? []).map(entry => [entry.id, entry]));
+    const seeTargets = new Map();
+    for (const block of blocks.values()) if (block.type === "decision") for (const option of block.options) if (option.see) seeTargets.set(option.see, block);
+
+    const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const termMap = new Map(Object.entries(plan.terms ?? {}).map(([term, definition]) => [term.toLowerCase(), { term, definition }]));
+    const termPattern = termMap.size ? new RegExp(`(?<![\\p{L}\\p{N}_-])(?:${[...termMap.values()].map(entry => entry.term).sort((a, b) => b.length - a.length).map(escapeRe).join("|")})(?![\\p{L}\\p{N}_-])`, "giu") : null;
+
+    function fnv(value) {
+      const text = JSON.stringify(value);
+      let hash = 0x811c9dc5;
+      for (let index = 0; index < text.length; index++) { hash ^= text.charCodeAt(index); hash = Math.imul(hash, 0x01000193); }
+      return (hash >>> 0).toString(16).padStart(8, "0");
+    }
+    const approvalHash = fnv({ scope: plan.scope, steps: [...steps.keys()].sort(), okay: okayList.map(entry => [entry.id, entry.action]) });
+    const optionsHash = block => fnv(block.options.map(option => [option.id, option.label, option.benefit, option.cost]));
+
+    const blank = () => ({ schemaVersion: 2, planId: plan.planId, theme: plan.theme ?? "dark", approval: null, okay: {}, decisions: {}, questions: {}, comments: [], overall: "" });
+    let state = blank();
+    let storageBlocked = false;
+    let fullPlan = false;
+    let tipCount = 0;
+    const openSections = new Set();
+    const editing = new Set();
+    const composing = new Map();
+
     function element(tag, text, className) {
       const node = document.createElement(tag);
-      if (text !== undefined) node.textContent = text;
+      if (text !== undefined && text !== null) node.textContent = text;
       if (className) node.className = className;
       return node;
     }
-    function validateBackup(data) {
-      if (!data || data.schemaVersion !== 1 || data.planId !== plan.planId || !Number.isSafeInteger(data.revision) || data.revision < 1 || !Array.isArray(data.entries)) throw new Error("Choose a version 1 backup for this plan.");
-      if ((data.overall !== undefined && typeof data.overall !== "string") || (data.theme !== undefined && !["dark", "light"].includes(data.theme))) throw new Error("The backup contains invalid overall feedback or a theme.");
-      const restored = Object.create(null);
-      for (const entry of data.entries) {
-        if (!entry || typeof entry.id !== "string" || !/^[a-z][a-z0-9-]{0,99}$/.test(entry.id) || Object.hasOwn(restored, entry.id) ||
-            typeof entry.comment !== "string" || !Object.hasOwn(decisions, entry.decision) ||
-            !Number.isSafeInteger(entry.reviewedRevision) || entry.reviewedRevision < 1 || typeof entry.updatedAt !== "string" ||
-            !entry.item || entry.item.id !== entry.id || typeof entry.item.title !== "string" || typeof entry.item.body !== "string" ||
-            !entry.context || ["title", "summary", "recommendation", "scope"].some(key => typeof entry.context[key] !== "string")) throw new Error("The backup contains an invalid feedback record.");
-        restored[entry.id] = { id: entry.id, comment: entry.comment, decision: entry.decision, reviewedRevision: entry.reviewedRevision, updatedAt: entry.updatedAt, item: entry.item, context: entry.context };
-      }
-      return restored;
+    function button(text, className, onClick) {
+      const node = element("button", text, className);
+      node.type = "button";
+      if (onClick) node.addEventListener("click", onClick);
+      return node;
     }
-    function storageFailure(message) {
+    function chip(text, kind) { return element("span", text, `ip-chip${kind ? ` ip-chip--${kind}` : ""}`); }
+    // Plan text renders only through text nodes. The first use of each term in a part becomes a tap-to-open definition.
+    function rich(text, used) {
+      const fragment = document.createDocumentFragment();
+      let last = 0;
+      if (termPattern && used) {
+        for (const match of text.matchAll(termPattern)) {
+          const entry = termMap.get(match[0].toLowerCase());
+          if (!entry || used.has(entry.term)) continue;
+          used.add(entry.term);
+          fragment.append(text.slice(last, match.index));
+          const tip = element("span", entry.definition, "ip-tip");
+          tip.hidden = true;
+          tip.id = `ip-tip-${++tipCount}`;
+          tip.setAttribute("role", "note");
+          const term = button(match[0], "ip-term", () => { tip.hidden = !tip.hidden; term.setAttribute("aria-expanded", String(!tip.hidden)); });
+          term.title = entry.definition;
+          term.setAttribute("aria-expanded", "false");
+          term.setAttribute("aria-controls", tip.id);
+          fragment.append(term, tip);
+          last = match.index + match[0].length;
+        }
+      }
+      fragment.append(text.slice(last));
+      return fragment;
+    }
+    function para(text, used, className = "ip-text") {
+      const node = element("p", undefined, className);
+      node.append(rich(text, used));
+      return node;
+    }
+    const changed = unit => Boolean(plan._history && unit._track && unit._track.changedIn === plan.revision);
+    const parseComment = id => { const match = commentPattern.exec(id); return match ? { target: match[1], n: Number(match[2]) } : null; };
+    const indent = text => text.trim().replace(/\n/g, "\n  ");
+
+    function clean(data) {
+      if (!data || data.schemaVersion !== 2 || data.planId !== plan.planId) throw new Error("Choose a version 2 backup for this plan.");
+      const next = blank();
+      if (["dark", "light"].includes(data.theme)) next.theme = data.theme;
+      if (data.approval && Object.hasOwn(approvalLabels, data.approval.choice) && typeof data.approval.hash === "string") next.approval = { choice: data.approval.choice, hash: data.approval.hash };
+      for (const entry of okayList) {
+        const saved = data.okay?.[entry.id];
+        if (saved && typeof saved.on === "boolean" && saved.action === entry.action) next.okay[entry.id] = { on: saved.on, action: saved.action };
+      }
+      for (const [id, saved] of Object.entries(data.decisions ?? {})) {
+        if (blocks.get(id)?.type === "decision" && saved && typeof saved.option === "string" && typeof saved.hash === "string" && (saved.note === undefined || typeof saved.note === "string")) next.decisions[id] = { option: saved.option, hash: saved.hash, note: saved.note ?? "" };
+      }
+      for (const [id, saved] of Object.entries(data.questions ?? {})) {
+        if (blocks.get(id)?.type === "question" && typeof saved?.text === "string") next.questions[id] = { text: saved.text };
+      }
+      const seen = new Set();
+      for (const comment of Array.isArray(data.comments) ? data.comments : []) {
+        const parsed = comment && typeof comment.id === "string" ? parseComment(comment.id) : null;
+        if (!parsed || seen.has(comment.id) || comment.target !== parsed.target || !Object.hasOwn(tags, comment.tag) || typeof comment.text !== "string" || !comment.text.trim() ||
+            !Number.isSafeInteger(comment.revision) || typeof comment.at !== "string" || (comment.reopened !== undefined && typeof comment.reopened !== "string")) continue;
+        seen.add(comment.id);
+        next.comments.push({ id: comment.id, target: comment.target, tag: comment.tag, text: comment.text, revision: comment.revision, at: comment.at, ...(comment.reopened ? { reopened: comment.reopened } : {}) });
+      }
+      if (typeof data.overall === "string") next.overall = data.overall;
+      return next;
+    }
+    function storageFailure() {
       storageBlocked = true;
-      $("storage-warning").textContent = `${message} Download feedback before closing this page. Your current comments remain in memory only.`;
-      $("save-status").textContent = "Not saved in this browser.";
+      $("ip-storage").hidden = false;
+      $("ip-storage").textContent = "This browser blocked storage. Your input stays only while this tab is open. Copy feedback or download a backup before you close it.";
+      $("ip-save-status").textContent = "Not saved in this browser.";
     }
-    try {
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        const data = JSON.parse(saved);
-        entries = validateBackup(data);
-        overall = data.overall ?? "";
-        theme = data.theme ?? theme;
+    function load() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        state = raw ? clean(JSON.parse(raw)) : blank();
+      } catch (error) {
+        if (error instanceof DOMException) storageFailure();
+        state = blank();
       }
-      $("save-status").textContent = Object.values(entries).some(hasFeedback) || overall.trim() ? "Earlier feedback restored from this browser." : "No feedback yet. Comments save in this browser.";
-    } catch (error) {
-      storageFailure(`Cannot read saved feedback: ${error.message}`);
-    }
-    function bundle() {
-      return {
-        schemaVersion: 1, planId: plan.planId, revision: plan.revision, exportedAt: new Date().toISOString(), overall, theme,
-        context: { title: plan.title, summary: plan.summary, recommendation: plan.recommendation, scope: plan.scope, changes: plan.changes ?? "" },
-        entries: Object.values(entries).filter(hasFeedback).map(entry => ({ ...entry, currentItem: items.get(entry.id) ?? null, state: state(entry, items.get(entry.id)) }))
-      };
-    }
-    function readable() {
-      const data = bundle();
-      const describe = item => canonical({
-        ...item,
-        ...(item.image ? { image: { ...item.image, data: "(embedded image omitted; see the HTML or JSON backup)", ...(item.image.mobileData ? { mobileData: "(embedded mobile image omitted; see the HTML or JSON backup)" } : {}) } } : {}),
-        ...(item.previewFile ? { previewFile: { ...item.previewFile, html: "(rendered example omitted; see the HTML or JSON backup)" } } : {})
-      });
-      const lines = [`# ${plan.title}`, `Plan: ${plan.planId} | Revision: ${plan.revision}`, "", plan.summary, "", `Recommendation: ${plan.recommendation}`, `Scope: ${plan.scope}`];
-      if (plan.changes) lines.push(`Changes: ${plan.changes}`);
-      lines.push("", "Review preferences only. No execution authority.", "");
-      if (data.overall.trim()) lines.push("## Overall feedback", data.overall, "");
-      if (!data.entries.length && !data.overall.trim()) lines.push("No feedback recorded.");
-      for (const entry of data.entries) {
-        lines.push(`## ${entry.id}: ${entry.item.title}`, `State: ${entry.state} | Reviewed revision: ${entry.reviewedRevision}`, `Decision: ${decisions[entry.decision]}`, `Comment: ${entry.comment || "(none)"}`, `Reviewed item: ${describe(entry.item)}`);
-        if (entry.state === "changed") lines.push(`Current item: ${describe(entry.currentItem)}`, `Earlier plan context: ${canonical(entry.context)}`, "Earlier decision needs another review.");
-        lines.push("");
-      }
-      return lines.join("\n");
-    }
-    function updateSummary() {
-      let reviewed = 0;
-      let changed = 0;
-      let commented = 0;
-      for (const [id, item] of items) {
-        const entry = entries[id];
-        const article = $(id);
-        if (article) article.dataset.commented = String(Boolean(entry?.comment.trim()));
-        const status = $(`comment-${id}-status`);
-        if (status) status.textContent = hasFeedback(entry) ? storageBlocked ? "In memory only. Export before closing." : "Saved in this browser." : "";
-        if (entry?.comment.trim()) commented++;
-        if (hasFeedback(entry) && state(entry, item) === "changed") changed++;
-        if (entry && entry.decision !== "undecided" && state(entry, item) === "current") reviewed++;
-      }
-      $("review-count").textContent = `${commented} of ${items.size} commented${reviewed ? ` · ${reviewed} reviewed` : ""}${changed ? ` · ${changed} need another review` : ""}`;
-      $("feedback-text").value = readable();
     }
     function save() {
       if (!storageBlocked) {
         try {
-          localStorage.setItem(key, JSON.stringify(bundle()));
-          $("save-status").textContent = "Saved in this browser. Export feedback to share or back it up.";
-        } catch (error) { storageFailure(`Cannot save feedback: ${error.message}`); }
-      }
-      updateSummary();
-    }
-    function updateEntry(item, change, renew = false) {
-      const previous = entries[item.id];
-      entries[item.id] = {
-        id: item.id, comment: "", decision: "undecided",
-        ...previous, ...change,
-        item: renew || !previous ? item : previous.item,
-        context: renew || !previous ? reviewContext : previous.context,
-        reviewedRevision: renew || !previous ? plan.revision : previous.reviewedRevision,
-        updatedAt: new Date().toISOString()
-      };
-      save();
-    }
-    function list(parent, heading, values) {
-      if (!values?.length) return;
-      parent.append(element("h4", heading));
-      const ul = element("ul");
-      for (const value of values) ul.append(element("li", value));
-      parent.append(ul);
-    }
-    function renderItem(item) {
-      const article = element("article", undefined, "ex");
-      article.id = item.id;
-      article.dataset.exampleId = item.id;
-      article.setAttribute("aria-labelledby", `${item.id}-label`);
-      if (item.previewFile || item.image || item.preview) {
-        const stage = element("div", undefined, "ex-stage");
-        const stageLabel = element("div", undefined, "ex-strip");
-        stageLabel.append(element("span", item.previewFile?.label ?? item.image?.caption ?? "Illustrative technical sample"), element("span", item.id, "ex-strip__id"));
-        stage.append(stageLabel);
-        const canvas = element("div", undefined, "ex-canvas");
-        if (item.previewFile) {
-          const frame = element("iframe", undefined, "planning-preview");
-          frame.title = `${item.title}: ${item.previewFile.label}`;
-          frame.setAttribute("sandbox", "");
-          frame.srcdoc = item.previewFile.html;
-          frame.style.setProperty("--preview-height", `${item.previewFile.height}px`);
-          frame.style.setProperty("--preview-mobile-height", `${item.previewFile.mobileHeight}px`);
-          canvas.append(frame);
+          localStorage.setItem(storageKey, JSON.stringify(state));
+          $("ip-save-status").textContent = "Saved in this browser.";
+        } catch {
+          storageFailure();
         }
-        if (item.image) {
-          const figure = element("figure");
-          const picture = element("picture");
-          if (item.image.mobileData) {
-            const mobile = element("source");
-            mobile.media = "(max-width: 767px)";
-            mobile.srcset = item.image.mobileData;
-            picture.append(mobile);
-          }
-          const image = element("img");
-          image.src = item.image.data;
-          image.alt = item.image.alt;
-          picture.append(image);
-          figure.append(picture, element("figcaption", item.image.caption));
-          canvas.append(figure);
-        }
-        if (item.preview) canvas.append(element("pre", item.preview));
-        stage.append(canvas);
-        article.append(stage);
-      } else article.classList.add("ex--text");
-      const content = element("div", undefined, "ex-side");
-      const tags = element("div", undefined, "ex-meta");
-      tags.append(element("span", item.id, "ex-id"));
-      const kindStyle = item.kind === "fact" ? "current" : ["assumption", "question", "risk"].includes(item.kind) ? "hypothetical" : "proposed";
-      tags.append(element("span", item.kind, `tag tag--${kindStyle}`));
-      if (item.recommended) tags.append(element("span", "Recommended", "tag tag--proposed"));
-      const link = element("a", "Link", "g-fine");
-      link.href = `#${item.id}`;
-      link.setAttribute("aria-label", `Link to ${item.title}`);
-      tags.append(link);
-      const title = element("h3", item.title, "ex-label");
-      title.id = `${item.id}-label`;
-      content.append(tags, title, element("p", item.body, "ex-desc planning-text"));
-      if (item.dependsOn?.length) {
-        const dependencies = element("p", "Start after: ", "ex-desc");
-        item.dependsOn.forEach((id, index) => {
-          if (index) dependencies.append(document.createTextNode(", "));
-          const link = element("a", items.get(id).title);
-          link.href = `#${id}`;
-          dependencies.append(link);
-        });
-        content.append(dependencies);
       }
-      if (item.criteria?.length || item.evidence?.length) {
-        const supporting = element("details", undefined, "planning-details");
-        supporting.append(element("summary", "Acceptance criteria and evidence"));
-        list(supporting, "Done when", item.criteria);
-        list(supporting, "Evidence", item.evidence);
-        content.append(supporting);
-      }
-      for (const detail of item.details ?? []) {
-        const details = element("details", undefined, "planning-details");
-        details.append(element("summary", detail.title), element("p", detail.body, "planning-text"));
-        content.append(details);
-      }
-      for (const reference of item.links ?? []) {
-        const paragraph = element("p");
-        const link = element("a", reference.label);
-        link.href = reference.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        paragraph.append(link);
-        content.append(paragraph);
-      }
-      const review = element("div", undefined, "ex-fb");
-      const entry = entries[item.id];
-      const changed = hasFeedback(entry) && state(entry, item) === "changed";
-      if (changed) {
-        review.append(element("p", `Review again. Your earlier decision refers to revision ${entry.reviewedRevision}.`, "g-warn notice"));
-        const earlier = element("details", undefined, "planning-details");
-        earlier.append(element("summary", "Read the earlier proposal"), element("p", entry.item.title), element("p", entry.item.body));
-        review.append(earlier);
-      }
-      const label = element("label", "Your decision");
-      label.htmlFor = `decision-${item.id}`;
-      const select = element("select");
-      select.id = label.htmlFor;
-      select.setAttribute("aria-label", `Decision for ${item.title}`);
-      for (const [value, text] of Object.entries(decisions)) {
-        const option = element("option", text);
-        option.value = value;
-        select.append(option);
-      }
-      select.value = entry?.decision ?? "undecided";
-      select.addEventListener("change", () => { updateEntry(item, { decision: select.value }, true); render(); });
-      const commentLabel = element("label", `Feedback on ${item.id}`);
-      commentLabel.htmlFor = `comment-${item.id}`;
-      const comment = element("textarea");
-      comment.id = commentLabel.htmlFor;
-      comment.dataset.feedbackId = item.id;
-      comment.rows = 3;
-      comment.setAttribute("aria-label", `Comments for ${item.title}`);
-      comment.placeholder = "What works, what does not, what is missing?";
-      comment.value = entry?.comment ?? "";
-      comment.addEventListener("input", () => updateEntry(item, { comment: comment.value }));
-      const decisionField = element("div", undefined, "planning-decision");
-      decisionField.append(label, select);
-      const status = element("span", undefined, "ex-fb__status");
-      status.id = `comment-${item.id}-status`;
-      status.setAttribute("aria-live", "polite");
-      review.append(commentLabel, comment, status, decisionField);
-      if (changed) {
-        const renew = element("button", "Keep decision for this revision", "g-btn");
-        renew.type = "button";
-        renew.addEventListener("click", () => { updateEntry(item, {}, true); render(); });
-        review.append(renew);
-      }
-      content.append(review);
-      article.append(content);
-      return article;
+      refreshSummary();
     }
-    function render() {
-      const focus = document.activeElement?.id;
-      $("sections").replaceChildren();
+
+    function decisionState(block) {
+      const saved = state.decisions[block.id];
+      const fresh = saved && saved.hash === optionsHash(block) ? saved : null;
+      const chosen = fresh && (fresh.option === "other" || block.options.some(option => option.id === fresh.option)) ? fresh.option : "";
+      const note = fresh?.note?.trim() ?? "";
+      const samePlan = Boolean(block.answer) && chosen === block.answer.option && note === (block.answer.note ?? "").trim();
+      return { fresh, chosen, note, stale: Boolean(saved) && !fresh, samePlan, settled: Boolean(block.answer) && (samePlan || (!chosen && !note)), answered: Boolean(chosen || block.answer), exportable: Boolean(fresh) && Boolean(chosen || note) && !samePlan };
+    }
+    function questionState(block) {
+      const text = state.questions[block.id]?.text.trim() ?? "";
+      const samePlan = Boolean(block.answer) && text === block.answer.trim();
+      return { text, settled: Boolean(block.answer) && (!text || samePlan), answered: Boolean(text || block.answer), exportable: Boolean(text) && !samePlan };
+    }
+    function approvalState() {
+      const local = state.approval && state.approval.hash === approvalHash ? state.approval : null;
+      const recorded = plan.approval?.approvedIn;
+      return { local, recorded, stale: Boolean(state.approval) && !local, choice: local?.choice ?? (recorded ? "approve" : "") };
+    }
+    const okayOn = entry => state.okay[entry.id]?.on ?? entry.granted ?? false;
+    function threadIds(target) {
+      const numbers = new Set();
+      for (const comment of state.comments) if (comment.target === target) numbers.add(parseComment(comment.id).n);
+      for (const reply of replies.keys()) { const parsed = parseComment(reply); if (parsed?.target === target) numbers.add(parsed.n); }
+      return [...numbers].sort((a, b) => a - b).map(n => `${target}.${n}`);
+    }
+    function isResolved(id) {
+      const reply = replies.get(id);
+      const comment = state.comments.find(entry => entry.id === id);
+      return Boolean(reply) && (!comment || comment.reopened !== fnv(reply.text));
+    }
+    const openComments = target => state.comments.filter(comment => comment.target === target && !isResolved(comment.id));
+    const freshReplies = target => threadIds(target).some(id => replies.get(id)?.revision === plan.revision);
+
+    function inputPoints() {
+      const points = [];
+      for (const block of blocks.values()) {
+        if (block.type === "decision") {
+          const decision = decisionState(block);
+          if (decision.settled && plan._history && !fullPlan) continue;
+          points.push({ id: block.id, title: block.title, needed: !block.answer, done: decision.answered, chip: decision.stale ? ["Choose again", "need"] : decision.answered ? ["Answered", "done"] : ["Needs your choice", "need"] });
+        } else if (block.type === "question") {
+          const question = questionState(block);
+          if (question.settled && plan._history && !fullPlan) continue;
+          points.push({ id: block.id, title: block.title, needed: false, done: question.answered, chip: question.answered ? ["Answered", "done"] : ["Optional", ""] });
+        }
+      }
+      const approval = approvalState();
+      const approvalChip = approval.choice === "approve" ? ["Approved", "done"] : approval.choice === "changes" ? ["After changes", "upd"] : approval.choice === "not-yet" ? ["Not yet", ""] : ["Needs your choice", "need"];
+      points.push({ id: "ip-approval", title: okayList.length ? `Approve the plan and okay ${okayList.length === 1 ? "one risky action" : `${okayList.length} risky actions`}` : "Approve the plan", needed: true, done: Boolean(approval.choice), chip: approvalChip });
+      return points;
+    }
+
+    function renderOverview() {
+      const root = $("ip-overview");
+      root.replaceChildren();
+      const used = new Set();
+      root.append(element("p", `${kinds[plan.kind] ?? "Plan"} · Revision ${plan.revision}`, "g-kicker"), element("h1", plan.title));
+      root.append(para(plan.summary, used, "g-lede ip-text"));
+      document.title = `${plan.title} · Plan review`;
+      const box = $("ip-plan-box");
+      box.replaceChildren(element("h2", "Recommendation and scope"));
+      box.firstChild.id = "ip-plan-box-title";
+      const part = (label, text) => { const node = element("p", undefined, "ip-text"); node.append(element("span", label, "ip-label"), rich(text, used)); box.append(node); };
+      part("Recommendation", plan.recommendation);
+      part("Scope", plan.scope);
+      if (plan.changes || plan._history) {
+        const changedCount = [...blocks.values(), ...steps.values()].filter(changed).length;
+        const removed = plan._removed ?? [];
+        const counts = plan._history ? `${changedCount} ${changedCount === 1 ? "part" : "parts"} changed or new. ${removed.length} removed.` : "";
+        part(`What changed in revision ${plan.revision}`, [plan.changes, counts, removed.length ? `Removed: ${removed.map(entry => entry.title).join(", ")}.` : ""].filter(Boolean).join(" "));
+      }
+      const reset = $("ip-reset");
+      reset.hidden = !plan._approvalReset;
+      if (plan._approvalReset) reset.textContent = `Your earlier approval no longer applies because ${plan._approvalReset.join(", ")}. Review the changes and approve again.`;
+      const nav = $("ip-nav");
+      nav.replaceChildren();
+      for (const [id, title] of [...plan.sections.map(section => [section.id, section.title]), ["ip-approval", "Approval"], ["ip-export", "Send feedback"]]) {
+        const link = element("a", title);
+        link.href = `#${id}`;
+        nav.append(link);
+      }
+    }
+
+    function refreshSummary() {
+      const points = inputPoints();
+      const list = $("ip-input-list");
+      list.replaceChildren();
+      for (const point of points) {
+        const item = element("li");
+        const link = element("a", point.title);
+        link.href = `#${point.id}`;
+        item.append(link, chip(...point.chip));
+        list.append(item);
+      }
+      const needed = points.filter(point => point.needed);
+      const done = needed.filter(point => point.done).length;
+      $("ip-count").textContent = `${done} of ${needed.length} answered`;
+      $("ip-progress").style.width = `${needed.length ? Math.round(done / needed.length * 100) : 100}%`;
+      const optional = points.length - needed.length;
+      $("ip-input-lede").textContent = `${needed.length === 1 ? "One point needs" : `${needed.length} points need`} your answer${optional ? `, and ${optional === 1 ? "one is" : `${optional} are`} optional` : ""}. The rest of the page is for reference. Comment on any part if you want a change.`;
+      const fresh = [...replies.values()].filter(reply => reply.revision === plan.revision);
+      $("ip-replies").textContent = fresh.length ? `The agent replied to ${fresh.length === 1 ? "one comment" : `${fresh.length} comments`} in this revision.` : "";
+      const full = $("ip-full");
+      full.hidden = !plan._history;
+      full.textContent = fullPlan ? "Show only what changed" : "Show full plan";
+      full.setAttribute("aria-pressed", String(fullPlan));
+      $("ip-feedback").value = exportText();
+    }
+
+    function collapsible(block) {
+      if (!plan._history || fullPlan) return false;
+      if (changed(block) || openComments(block.id).length || freshReplies(block.id) || composing.has(block.id)) return false;
+      if (block.type === "decision" && !decisionState(block).settled) return false;
+      if (block.type === "question" && !questionState(block).settled) return false;
+      if (block.type === "visual" && seeTargets.has(block.id) && !decisionState(seeTargets.get(block.id)).settled) return false;
+      if (block.type === "steps" && block.items.some(step => changed(step) || step.status || openComments(step.id).length || freshReplies(step.id) || composing.has(step.id))) return false;
+      return true;
+    }
+    function renderSections() {
+      const root = $("ip-sections");
+      root.replaceChildren();
       for (const section of plan.sections) {
         const node = element("section", undefined, "g-section");
         node.id = section.id;
         const head = element("div", undefined, "g-section__head");
-        head.append(element("h2", section.title), element("p", section.summary, "planning-text"));
+        head.append(element("h2", section.title));
+        if (section.summary) head.append(para(section.summary, new Set()));
         node.append(head);
-        section.items.forEach(item => node.append(renderItem(item)));
-        $("sections").append(node);
+        const hidden = [];
+        for (const block of section.blocks) {
+          if (!openSections.has(section.id) && collapsible(block)) hidden.push(block);
+          else node.append(block.type === "visual" ? renderVisual(block) : renderBlock(block));
+        }
+        if (hidden.length) {
+          const row = element("div", undefined, "ip-collapsed");
+          row.append(element("span", `Unchanged in revision ${plan.revision}: ${hidden.length === 1 ? "1 part" : `${hidden.length} parts`} (${hidden.map(block => block.title ?? typeLabels[block.type]).join(", ")}).`));
+          row.append(button("Show", "g-btn g-btn--quiet", () => { openSections.add(section.id); renderAll(); }));
+          node.append(row);
+        }
+        root.append(node);
       }
-      $("history-items").replaceChildren();
-      const removed = Object.values(entries).filter(entry => hasFeedback(entry) && !items.has(entry.id));
-      $("history").hidden = !removed.length;
-      for (const entry of removed) {
-        const article = element("article", undefined, "g-box planning-history");
-        article.append(element("h3", `${entry.item.title} (${entry.id})`), element("p", entry.item.body), element("p", `Earlier decision: ${decisions[entry.decision]}`), element("p", `Comment: ${entry.comment || "(none)"}`));
-        $("history-items").append(article);
+    }
+    function headRow(unit, label, extra = []) {
+      const head = element("div", undefined, "ip-head");
+      head.append(element("span", unit.id, "ex-id"));
+      if (label) head.append(element("span", label, "ip-kind"));
+      if (changed(unit)) head.append(chip(unit._track.added ? "New" : "Updated", "upd"));
+      head.append(...extra);
+      return head;
+    }
+    function extras(unit) {
+      const used = new Set();
+      const sections = [];
+      if (unit.criteria?.length) sections.push(["Done when", unit.criteria]);
+      if (unit.evidence?.length) sections.push(["Evidence", unit.evidence]);
+      if (!sections.length && !unit.details?.length && !unit.links?.length) return [];
+      const more = element("details", undefined, "ip-more");
+      const names = [...sections.map(entry => entry[0].toLowerCase()), ...(unit.details ?? []).map(detail => detail.title.toLowerCase()), ...(unit.links?.length ? ["links"] : [])];
+      more.append(element("summary", `More: ${names.join(", ")}`));
+      for (const [title, items] of sections) {
+        more.append(element("h4", title));
+        const list = element("ul");
+        for (const entry of items) { const item = element("li", undefined, "ip-text"); item.append(rich(entry, used)); list.append(item); }
+        more.append(list);
       }
-      updateSummary();
-      if (focus?.startsWith("decision-")) $(focus)?.focus();
+      for (const detail of unit.details ?? []) more.append(element("h4", detail.title), para(detail.body, used));
+      if (unit.links?.length) {
+        const links = element("p");
+        unit.links.forEach((entry, index) => {
+          const link = element("a", entry.label);
+          link.href = entry.url;
+          link.rel = "noreferrer noopener";
+          link.target = "_blank";
+          if (index) links.append(" · ");
+          links.append(link);
+        });
+        more.append(element("h4", "Links"), links);
+      }
+      return [more];
+    }
+    function wordDiff(before, after) {
+      const a = before.split(/(\s+)/).filter(Boolean);
+      const b = after.split(/(\s+)/).filter(Boolean);
+      if (a.length > 600 || b.length > 600) return [["del", before], ["ins", after]];
+      const table = Array.from({ length: a.length + 1 }, () => new Uint16Array(b.length + 1));
+      for (let i = a.length - 1; i >= 0; i--) for (let j = b.length - 1; j >= 0; j--) table[i][j] = a[i] === b[j] ? table[i + 1][j + 1] + 1 : Math.max(table[i + 1][j], table[i][j + 1]);
+      const parts = [];
+      const push = (kind, text) => { const last = parts[parts.length - 1]; if (last && last[0] === kind) last[1] += text; else parts.push([kind, text]); };
+      let i = 0;
+      let j = 0;
+      while (i < a.length && j < b.length) {
+        if (a[i] === b[j]) { push("same", a[i]); i++; j++; }
+        else if (table[i + 1][j] >= table[i][j + 1]) push("del", a[i++]);
+        else push("ins", b[j++]);
+      }
+      while (i < a.length) push("del", a[i++]);
+      while (j < b.length) push("ins", b[j++]);
+      return parts;
+    }
+    function diffControl(unit) {
+      if (!changed(unit) || unit._track.previous === undefined) return null;
+      const panel = element("div", undefined, "ip-diff");
+      panel.hidden = true;
+      panel.id = `ip-d-${unit.id}`;
+      const toggle = button("Show what changed", "ip-cbtn", () => {
+        if (!panel.childNodes.length) {
+          for (const [kind, text] of wordDiff(unit._track.previous, unit._track.current ?? "")) panel.append(kind === "same" ? text : element(kind, text));
+        }
+        panel.hidden = !panel.hidden;
+        toggle.textContent = panel.hidden ? "Show what changed" : "Hide what changed";
+        toggle.setAttribute("aria-expanded", String(!panel.hidden));
+      });
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", panel.id);
+      return { toggle, panel };
+    }
+
+    function message(who, text, agent, label) {
+      const node = element("p", undefined, `ip-msg ip-text${agent ? " ip-msg--agent" : ""}`);
+      node.append(element("span", label ? `${who} · ${label}` : who, "ip-who"), text);
+      return node;
+    }
+    function startComment(target, edit) {
+      const comment = edit ? state.comments.find(entry => entry.id === edit) : null;
+      composing.set(target, { edit, tag: comment?.tag ?? "", text: comment?.text ?? "" });
+      renderAll(`ip-t-${target}`);
+    }
+    function nextCommentId(target) {
+      const numbers = threadIds(target).map(id => parseComment(id).n);
+      return `${target}.${numbers.length ? Math.max(...numbers) + 1 : 1}`;
+    }
+    function composer(target) {
+      const draft = composing.get(target);
+      const box = element("div", undefined, "ip-compose");
+      const field = element("div", undefined, "ip-field");
+      const label = element("label", draft.edit ? `Edit comment ${draft.edit}` : `New comment on ${target}`);
+      label.htmlFor = `ip-t-${target}`;
+      const area = element("textarea");
+      area.id = `ip-t-${target}`;
+      area.rows = 3;
+      area.value = draft.text;
+      area.placeholder = "What do you want to change, keep, or ask?";
+      area.addEventListener("input", () => { draft.text = area.value; });
+      field.append(label, area);
+      const kind = element("select");
+      kind.id = `ip-k-${target}`;
+      kind.setAttribute("aria-label", "Comment type");
+      for (const [value, text] of Object.entries(tags)) { const option = element("option", text); option.value = value; option.selected = value === draft.tag; kind.append(option); }
+      kind.addEventListener("change", () => { draft.tag = kind.value; });
+      const status = element("span", "", "g-fine");
+      const row = element("div", undefined, "ip-row");
+      row.append(kind, button(draft.edit ? "Save" : "Add comment", "g-btn g-btn--primary", () => {
+        const text = area.value.trim();
+        if (!text) { status.textContent = "Write a comment first."; area.focus(); return; }
+        if (draft.edit) Object.assign(state.comments.find(entry => entry.id === draft.edit), { text, tag: draft.tag, at: new Date().toISOString() });
+        else state.comments.push({ id: nextCommentId(target), target, tag: draft.tag, text, revision: plan.revision, at: new Date().toISOString() });
+        composing.delete(target);
+        save();
+        renderAll(`ip-c-${target}`);
+      }), button("Cancel", "g-btn g-btn--quiet", () => { composing.delete(target); renderAll(`ip-c-${target}`); }), status);
+      box.append(field, row);
+      return box;
+    }
+    function thread(target, id) {
+      const comment = state.comments.find(entry => entry.id === id);
+      const reply = replies.get(id);
+      const tagLabel = comment?.tag ? tags[comment.tag] : "";
+      if (isResolved(id)) {
+        const node = element("details", undefined, "ip-thread");
+        const summary = element("summary");
+        summary.append(element("b", replyLabels[reply.status]), ` · ${id} · ${reply.text.length > 90 ? `${reply.text.slice(0, 90)}…` : reply.text}`);
+        node.append(summary, message("You", comment?.text ?? reply.comment, false, tagLabel), message("Agent", reply.text, true, `revision ${reply.revision}`));
+        const row = element("div", undefined, "ip-row");
+        row.append(button("Reply", "ip-cbtn", () => startComment(target)), button("Reopen", "ip-cbtn", () => {
+          if (comment) comment.reopened = fnv(reply.text);
+          else state.comments.push({ id, target, tag: "", text: reply.comment, revision: reply.revision, at: new Date().toISOString(), reopened: fnv(reply.text) });
+          save();
+          renderAll();
+        }));
+        node.append(row);
+        return node;
+      }
+      if (!comment) return null;
+      const node = element("div", undefined, "ip-thread ip-thread--open");
+      node.append(message(`You · ${id}`, comment.text, false, tagLabel));
+      if (reply) node.append(message("Agent", reply.text, true, "you reopened this"));
+      const row = element("div", undefined, "ip-row");
+      row.append(button("Edit", "ip-cbtn", () => startComment(target, id)), button("Delete", "ip-cbtn", () => {
+        state.comments = state.comments.filter(entry => entry.id !== id);
+        save();
+        renderAll(`ip-c-${target}`);
+        $("ip-action-status").textContent = `Deleted comment ${id}.`;
+      }));
+      node.append(row);
+      return node;
+    }
+    function commentArea(target) {
+      const count = openComments(target).length;
+      const toggle = button(count ? `Comments (${count})` : "Comment", `ip-cbtn${count ? " ip-cbtn--has" : ""}`, () => startComment(target));
+      toggle.id = `ip-c-${target}`;
+      const panel = element("div", undefined, "ip-thread-wrap");
+      for (const id of threadIds(target)) { const node = thread(target, id); if (node) panel.append(node); }
+      if (composing.has(target)) panel.append(composer(target));
+      return { toggle, panel, count };
+    }
+
+    function renderBlock(block) {
+      const used = new Set();
+      const card = element("article", undefined, `ip-card ip-card--${block.type}`);
+      card.id = block.id;
+      const stateChips = [];
+      if (block.type === "decision") { const decision = decisionState(block); stateChips.push(decision.answered ? chip("Answered", "done") : chip("Needs your choice", "need")); }
+      if (block.type === "question") stateChips.push(questionState(block).answered ? chip("Answered", "done") : chip("Optional"));
+      card.append(headRow(block, typeLabels[block.type], stateChips));
+      if (block.title) { const title = element("h3"); title.id = `ip-h-${block.id}`; title.append(rich(block.title, used)); card.append(title); }
+      if (block.body) card.append(para(block.body, used));
+      if (block.type === "facts") {
+        const list = element("dl", undefined, "ip-facts");
+        for (const item of block.items) { const value = element("dd", undefined, "ip-text"); value.append(rich(item.value, used)); list.append(element("dt", item.label), value); }
+        card.append(list);
+      } else if (block.type === "risks") {
+        for (const item of block.items) {
+          const risk = element("div", undefined, "ip-risk");
+          const effect = element("p", undefined, "ip-text");
+          effect.append(element("span", "If it happens: ", "ip-cons"), rich(item.effect, used));
+          const response = element("p", undefined, "ip-text");
+          response.append(element("span", "What we do: ", "ip-cons"), rich(item.response, used));
+          risk.append(element("b", item.title), effect, response);
+          card.append(risk);
+        }
+      } else if (block.type === "comparison") {
+        const wrap = element("div", undefined, "ip-table-wrap");
+        const table = element("table", undefined, "ip-table");
+        const head = element("tr");
+        head.append(element("th", "Option"), ...block.columns.map(column => element("th", column)));
+        const body = element("tbody");
+        for (const row of block.rows) {
+          const line = element("tr");
+          const name = element("th", row.option);
+          name.scope = "row";
+          line.append(name, ...row.cells.map(cell => { const node = element("td", undefined, "ip-text"); node.append(rich(cell, used)); return node; }));
+          body.append(line);
+        }
+        const thead = element("thead");
+        thead.append(head);
+        table.append(thead, body);
+        wrap.append(table);
+        card.append(wrap);
+      } else if (block.type === "code") {
+        if (block.language) card.append(element("span", block.language, "ip-kind"));
+        const pre = element("pre", undefined, "ip-code");
+        pre.append(element("code", block.code));
+        card.append(pre);
+      } else if (block.type === "steps") renderSteps(block, card);
+      else if (block.type === "decision") renderDecision(block, card);
+      else if (block.type === "question") renderQuestion(block, card);
+      card.append(...extras(block));
+      const diff = diffControl(block);
+      const comments = commentArea(block.id);
+      const actions = element("div", undefined, "ip-actions");
+      actions.append(comments.toggle);
+      if (diff) actions.append(diff.toggle);
+      card.append(actions);
+      if (diff) card.append(diff.panel);
+      card.append(comments.panel);
+      return card;
+    }
+    function renderSteps(block, card) {
+      if (block.items.some(step => step.status)) {
+        const done = block.items.filter(step => step.status === "done").length;
+        card.append(element("p", `${done} of ${block.items.length} steps done.`, "g-fine"));
+        const bar = element("div", undefined, "ip-progress");
+        const fill = element("span");
+        fill.style.width = `${Math.round(done / block.items.length * 100)}%`;
+        bar.append(fill);
+        card.append(bar);
+      }
+      const list = element("ol", undefined, "ip-steps");
+      block.items.forEach((step, index) => {
+        const used = new Set();
+        const item = element("li", undefined, "ip-step");
+        item.id = step.id;
+        const compact = plan._history && !fullPlan && !changed(step) && !openComments(step.id).length && !freshReplies(step.id) && !composing.has(step.id);
+        item.append(element("span", step.status === "done" ? "✓" : String(index + 1), `ip-num${step.status === "done" ? " ip-num--done" : ""}`));
+        const main = element("div");
+        const title = element("b");
+        title.append(rich(step.title, used));
+        main.append(title);
+        if (changed(step)) main.append(" ", chip(step._track.added ? "New" : "Updated", "upd"));
+        if (!compact) {
+          if (step.body) main.append(para(step.body, used));
+          // A step that waits only for the step above it follows the list order, so the line adds nothing.
+          const onlyPrevious = step.after?.length === 1 && step.after[0] === block.items[index - 1]?.id;
+          if (step.after?.length && !onlyPrevious) main.append(element("div", `After ${step.after.map(id => stepPlace.get(id).block === block ? `step ${stepPlace.get(id).number}` : `“${steps.get(id).title}”`).join(", ")}`, "ip-meta"));
+          main.append(...extras(step));
+        }
+        if (step.statusNote) main.append(element("div", step.statusNote, "ip-meta ip-text"));
+        const side = element("div", undefined, "ip-side");
+        if (step.status) side.append(chip(...statusLabels[step.status]));
+        const comments = commentArea(step.id);
+        side.append(comments.toggle);
+        const diff = diffControl(step);
+        if (diff && !compact) { side.append(diff.toggle); main.append(diff.panel); }
+        item.append(main, side, comments.panel);
+        list.append(item);
+      });
+      card.append(list);
+    }
+    function settledRow(text, id) {
+      const row = element("div", undefined, "ip-settled");
+      row.append(element("span", text), button("Change", "ip-cbtn", () => { editing.add(id); renderAll(`ip-r-${id}-0`); }));
+      return row;
+    }
+    function renderDecision(block, card) {
+      const decision = decisionState(block);
+      if (decision.stale) card.append(element("p", "The options changed after you chose. Choose again.", "ip-warn-inline"));
+      if (decision.settled && block.answer && !editing.has(block.id)) {
+        const option = block.options.find(entry => entry.id === block.answer.option);
+        card.append(settledRow(`Chosen: ${option ? option.label : "Something else"}${block.answer.note ? `. ${block.answer.note}` : ""}`, block.id));
+        return;
+      }
+      const group = element("div", undefined, "ip-choices");
+      group.setAttribute("role", "radiogroup");
+      group.setAttribute("aria-labelledby", `ip-h-${block.id}`);
+      const choose = value => {
+        state.decisions[block.id] = { option: value, hash: optionsHash(block), note: decision.fresh?.note ?? "" };
+        save();
+        renderAll(document.activeElement?.id);
+      };
+      [...block.options, { id: "other", label: "Something else", benefit: "Describe what you want in the note below." }].forEach((option, index) => {
+        const used = new Set();
+        const choice = element("label", undefined, `ip-choice${decision.chosen === option.id ? " is-on" : ""}`);
+        const input = element("input");
+        input.type = "radio";
+        input.name = `ip-r-${block.id}`;
+        input.id = `ip-r-${block.id}-${index}`;
+        input.value = option.id;
+        input.checked = decision.chosen === option.id;
+        input.addEventListener("change", () => choose(option.id));
+        const text = element("div");
+        if (option.recommended) text.append(element("span", "Recommended", "ip-rec"));
+        text.append(element("b", option.label), para(option.benefit, used));
+        if (option.cost) { const cost = element("p", undefined, "ip-cons ip-text"); cost.append("Cost: ", rich(option.cost, used)); text.append(cost); }
+        if (option.see) { const link = element("a", "See the example"); link.href = `#${option.see}`; const line = element("p"); line.append(link); text.append(line); }
+        choice.append(input, text);
+        group.append(choice);
+      });
+      card.append(group);
+      const field = element("div", undefined, "ip-field");
+      const label = element("label", decision.chosen === "other" ? "Describe your choice" : "Note (optional)");
+      label.htmlFor = `ip-n-${block.id}`;
+      const area = element("textarea");
+      area.id = `ip-n-${block.id}`;
+      area.rows = 2;
+      area.value = decision.fresh?.note ?? "";
+      area.addEventListener("input", () => {
+        state.decisions[block.id] = { option: decisionState(block).chosen, hash: optionsHash(block), note: area.value };
+        save();
+      });
+      field.append(label, area);
+      card.append(field);
+    }
+    function renderQuestion(block, card) {
+      const question = questionState(block);
+      if (question.settled && !editing.has(block.id)) { card.append(settledRow(`Answer: ${block.answer}`, block.id)); return; }
+      const field = element("div", undefined, "ip-field");
+      const label = element("label", "Your answer");
+      label.htmlFor = `ip-r-${block.id}-0`;
+      const area = element("textarea");
+      area.id = `ip-r-${block.id}-0`;
+      area.rows = 3;
+      area.placeholder = block.placeholder ?? "";
+      area.value = state.questions[block.id]?.text ?? block.answer ?? "";
+      area.addEventListener("input", () => { state.questions[block.id] = { text: area.value }; save(); });
+      field.append(label, area);
+      card.append(field);
+    }
+    function renderVisual(block) {
+      const used = new Set();
+      const card = element("article", undefined, "ex");
+      card.id = block.id;
+      const stage = element("div", undefined, "ex-stage");
+      const strip = element("div", undefined, "ex-strip");
+      strip.append(element("span", block.previewFile?.label ?? block.image.caption), element("span", block.id, "ex-strip__id"));
+      const canvas = element("div", undefined, "ex-canvas");
+      if (block.previewFile) {
+        canvas.classList.add("ip-flush");
+        const frame = element("iframe", undefined, "ip-preview");
+        frame.setAttribute("sandbox", "");
+        frame.srcdoc = block.previewFile.html;
+        frame.title = block.previewFile.label;
+        frame.loading = "lazy";
+        frame.style.setProperty("--h", `${block.previewFile.height}px`);
+        frame.style.setProperty("--mh", `${block.previewFile.mobileHeight}px`);
+        canvas.append(frame);
+      } else {
+        const figure = element("figure");
+        const picture = element("picture");
+        if (block.image.mobileData) { const source = element("source"); source.media = "(max-width: 767px)"; source.srcset = block.image.mobileData; picture.append(source); }
+        const image = element("img");
+        image.src = block.image.data;
+        image.alt = block.image.alt;
+        picture.append(image);
+        figure.append(picture, element("figcaption", block.image.caption));
+        canvas.append(figure);
+      }
+      stage.append(strip, canvas);
+      const side = element("div", undefined, "ex-side");
+      const meta = element("div", undefined, "ex-meta");
+      meta.append(element("span", block.id, "ex-id"));
+      if (changed(block)) meta.append(chip(block._track.added ? "New" : "Updated", "upd"));
+      if (seeTargets.has(block.id)) { const link = element("a", `Option in “${seeTargets.get(block.id).title}”`); link.href = `#${seeTargets.get(block.id).id}`; meta.append(link); }
+      const title = element("h3", undefined, "ex-label");
+      title.append(rich(block.title, used));
+      side.append(meta, title);
+      if (block.body) side.append(para(block.body, used, "ex-desc ip-text"));
+      side.append(...extras(block));
+      const diff = diffControl(block);
+      const comments = commentArea(block.id);
+      const feedback = element("div", undefined, "ex-fb");
+      const actions = element("div", undefined, "ip-row");
+      actions.append(comments.toggle);
+      if (diff) actions.append(diff.toggle);
+      feedback.append(...(diff ? [diff.panel] : []), comments.panel, actions);
+      side.append(feedback);
+      card.dataset.commented = String(comments.count > 0);
+      card.append(stage, side);
+      return card;
+    }
+
+    function renderApproval() {
+      const card = $("ip-approval-card");
+      card.replaceChildren();
+      const used = new Set();
+      const approval = approvalState();
+      if (plan.approval?.covers) { const covers = element("p", undefined, "ip-text"); covers.append(element("span", "What approval covers", "ip-label"), rich(plan.approval.covers, used)); card.append(covers); }
+      if (okayList.length) {
+        card.append(element("h3", "Actions that need your okay"));
+        card.append(element("p", "The agent does low and medium risk work without asking. These actions are high risk, so the agent does them only if you turn them on.", "g-fine"));
+        const list = element("ul", undefined, "ip-okay");
+        for (const entry of okayList) {
+          const item = element("li");
+          item.id = entry.id;
+          const text = element("div");
+          const action = element("b");
+          action.append(rich(entry.action, used));
+          text.append(action, para(entry.why, used));
+          const toggle = element("label", undefined, "ip-switch");
+          const input = element("input");
+          input.type = "checkbox";
+          input.id = `ip-ok-${entry.id}`;
+          input.checked = okayOn(entry);
+          input.addEventListener("change", () => { state.okay[entry.id] = { on: input.checked, action: entry.action }; save(); });
+          toggle.append(input, "Okay");
+          item.append(text, toggle);
+          list.append(item);
+        }
+        card.append(list);
+      }
+      if (approval.recorded) card.append(element("p", `You approved this plan in revision ${approval.recorded}.`, "g-fine"));
+      if (approval.stale) card.append(element("p", "The steps, scope, or okay list changed after you chose. Choose again.", "ip-warn-inline"));
+      const group = element("div", undefined, "ip-seg");
+      group.setAttribute("role", "radiogroup");
+      group.setAttribute("aria-label", "Approval");
+      for (const [value, label] of Object.entries(approvalLabels)) {
+        const choice = button(label, "", () => { state.approval = { choice: value, hash: approvalHash }; save(); renderApproval(); $(`ip-a-${value}`).focus(); });
+        choice.id = `ip-a-${value}`;
+        choice.setAttribute("role", "radio");
+        choice.setAttribute("aria-checked", String(approval.choice === value));
+        group.append(choice);
+      }
+      card.append(group);
+      card.append(element("p", "Approve after changes means: make the changes in your comments, then go ahead without another review.", "g-fine"));
+    }
+    function renderHistory() {
+      const orphans = state.comments.filter(comment => !units.has(comment.target));
+      const root = $("ip-history-items");
+      root.replaceChildren();
+      $("ip-history").hidden = !orphans.length;
+      for (const target of new Set(orphans.map(comment => comment.target))) {
+        const removed = removedById.get(target);
+        const box = element("div", undefined, "ip-card");
+        box.append(headRow({ id: target }, "Removed"), element("h3", removed?.title ?? target));
+        if (removed?.text) { const more = element("details", undefined, "ip-more"); more.append(element("summary", "Text before removal"), element("p", removed.text, "ip-text")); box.append(more); }
+        const panel = element("div", undefined, "ip-thread-wrap");
+        for (const id of threadIds(target)) { const node = thread(target, id); if (node) panel.append(node); }
+        box.append(panel);
+        root.append(box);
+      }
+    }
+
+    function exportText() {
+      const lines = [`Feedback on "${plan.title}" (${plan.planId}, revision ${plan.revision})`];
+      const approval = approvalState();
+      if (approval.local && !(approval.local.choice === "approve" && approval.recorded)) lines.push(`Approval: ${approvalLabels[approval.local.choice]}`);
+      for (const entry of okayList) if (okayOn(entry) !== (entry.granted ?? false)) lines.push(`Okay ${entry.id}: ${okayOn(entry) ? "yes" : "no"}`);
+      for (const block of blocks.values()) {
+        if (block.type === "decision") {
+          const decision = decisionState(block);
+          if (!decision.exportable) continue;
+          const option = block.options.find(entry => entry.id === decision.chosen);
+          const choice = decision.chosen === "other" ? "something else" : option ? `${option.id} (${option.label})` : "no choice";
+          lines.push(`Decision ${block.id}: ${choice}${decision.note ? `. Note: ${indent(decision.note)}` : ""}`);
+        } else if (block.type === "question") {
+          const question = questionState(block);
+          if (question.exportable) lines.push(`Answer ${block.id}: ${indent(question.text)}`);
+        }
+      }
+      for (const comment of state.comments) {
+        if (isResolved(comment.id)) continue;
+        const notes = [comment.tag ? tags[comment.tag].toLowerCase() : "", comment.reopened ? "reopened" : "", units.has(comment.target) ? "" : "removed part"].filter(Boolean);
+        lines.push(`Comment ${comment.id}${notes.length ? ` (${notes.join(", ")})` : ""}: ${indent(comment.text)}`);
+      }
+      if (state.overall.trim()) lines.push(`Overall: ${indent(state.overall)}`);
+      if (lines.length === 1) lines.push("No input yet.");
+      return lines.join("\n");
+    }
+    function planMarkdown() {
+      const out = [`# ${plan.title}`, "", plan.summary, "", `Recommendation: ${plan.recommendation}`, "", `Scope: ${plan.scope}`];
+      for (const section of plan.sections) {
+        out.push("", `## ${section.title}`);
+        if (section.summary) out.push("", section.summary);
+        for (const block of section.blocks) {
+          out.push("", `### ${block.title ?? typeLabels[block.type] ?? "Visual"} (${block.id})`);
+          if (block.body) out.push("", block.body);
+          if (block.type === "facts") out.push("", ...block.items.map(item => `- ${item.label}: ${item.value}`));
+          if (block.type === "steps") out.push("", ...block.items.map((step, index) => `${index + 1}. ${step.title} (${step.id})${step.status ? ` [${statusLabels[step.status][0]}]` : ""}${step.body ? `: ${step.body}` : ""}`));
+          if (block.type === "risks") out.push("", ...block.items.map(item => `- ${item.title}. If it happens: ${item.effect} What we do: ${item.response}`));
+          if (block.type === "comparison") out.push("", ...block.rows.map(row => `- ${row.option}: ${row.cells.map((cell, index) => `${block.columns[index]}: ${cell}`).join("; ")}`));
+          if (block.type === "code") out.push("", `\`\`\`${block.language ?? ""}`, block.code, "```");
+          if (block.type === "decision") {
+            out.push("", ...block.options.map(option => `- ${option.label} (${option.id})${option.recommended ? " [recommended]" : ""}: ${option.benefit} Cost: ${option.cost}`));
+            if (block.answer) out.push("", `Chosen: ${block.answer.option}${block.answer.note ? `. ${block.answer.note}` : ""}`);
+          }
+          if (block.type === "question" && block.answer) out.push("", `Answer: ${block.answer}`);
+        }
+      }
+      if (okayList.length) out.push("", "## Actions that need your okay", "", ...okayList.map(entry => `- ${entry.action} (${entry.id}): ${entry.why}`));
+      return `${out.join("\n")}\n`;
     }
     function download(name, text, mime) {
-      const url = URL.createObjectURL(new Blob([text], { type: mime }));
-      const link = element("a");
-      link.href = url;
-      link.download = name;
-      document.body.append(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-    function safelyDownload(name, text, mime) {
       try {
-        download(name, text, mime);
-        $("action-status").textContent = "Download requested. Keep the file before closing this page.";
+        const url = URL.createObjectURL(new Blob([text], { type: mime }));
+        const link = element("a");
+        link.href = url;
+        link.download = name;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        $("ip-action-status").textContent = "Download requested.";
       } catch (error) {
-        $("transfer").open = true;
-        $("action-status").textContent = `Download failed: ${error.message}. Copy the readable feedback below.`;
+        $("ip-action-status").textContent = `Download failed: ${error.message}. Copy the feedback text instead.`;
+      }
+    }
+    async function copyFeedback() {
+      const text = exportText();
+      const status = $("ip-copy-status");
+      try {
+        await navigator.clipboard.writeText(text);
+        status.textContent = "Copied. Paste it into the conversation.";
+        status.dataset.kind = "ok";
+        $("ip-action-status").textContent = status.textContent;
+      } catch {
+        const area = $("ip-feedback");
+        area.value = text;
+        area.scrollIntoView({ block: "center" });
+        area.focus();
+        area.select();
+        status.textContent = "Clipboard blocked. Copy the selected text.";
+        status.dataset.kind = "warn";
+        $("ip-action-status").textContent = "Clipboard access failed. The feedback text is selected below.";
       }
     }
     function applyTheme() {
-      document.documentElement.dataset.theme = theme;
-      for (const button of document.querySelectorAll("[data-theme-choice]")) button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
+      document.documentElement.dataset.theme = state.theme;
+      for (const choice of document.querySelectorAll("[data-theme-choice]")) choice.setAttribute("aria-pressed", String(choice.dataset.themeChoice === state.theme));
     }
-    applyTheme();
-    for (const button of document.querySelectorAll("[data-theme-choice]")) button.addEventListener("click", () => {
-      theme = button.dataset.themeChoice;
+    function renderAll(focusId) {
+      tipCount = 0;
       applyTheme();
-      save();
-    });
-    $("overall").value = overall;
-    $("overall").addEventListener("input", () => { overall = $("overall").value; save(); });
-    document.title = `${plan.title} · Plan review`;
-    $("plan-meta").textContent = `${plan.planId}\nRevision ${plan.revision}`;
-    for (const section of [...plan.sections, { id: "overall-section", title: "Overall feedback" }, { id: "exports", title: "Export" }]) {
-      const link = element("a", section.title);
-      link.href = `#${section.id}`;
-      $("navigation").append(link);
+      renderOverview();
+      renderSections();
+      renderApproval();
+      renderHistory();
+      if ($("ip-overall") !== document.activeElement) $("ip-overall").value = state.overall;
+      refreshSummary();
+      if (focusId && $(focusId)) $(focusId).focus({ preventScroll: true });
     }
-    $("overview").append(element("p", "Design and engineering review gallery", "g-kicker"), element("h1", plan.title), element("p", plan.summary, "g-lede planning-text"));
-    const facts = $("plan-details");
-    facts.append(element("h3", "Recommended approach"), element("p", plan.recommendation, "planning-text"), element("h3", "Scope"), element("p", plan.scope, "planning-text"));
-    if (plan.changes) facts.append(element("h3", "What changed"), element("p", plan.changes));
-    async function copyFeedback() {
-      const text = readable();
-      try {
-        await navigator.clipboard.writeText(text);
-        $("action-status").textContent = "Feedback copied. Paste it into the conversation.";
-        $("copy-status").textContent = "Feedback copied.";
-        $("copy-status").dataset.kind = "ok";
-        $("action-status").dataset.kind = "ok";
-      } catch (error) {
-        $("transfer").open = true;
-        $("feedback-text").value = text;
-        $("feedback-text").focus();
-        $("feedback-text").select();
-        $("action-status").textContent = "Clipboard access failed. Copy the selected feedback below, or download a backup.";
-        $("copy-status").textContent = "Clipboard blocked. Use Export.";
-        $("copy-status").dataset.kind = "warn";
-        $("action-status").dataset.kind = "warn";
-      }
-    }
-    $("copy").addEventListener("click", copyFeedback);
-    $("copy-2").addEventListener("click", copyFeedback);
-    $("download").addEventListener("click", () => safelyDownload(`${plan.planId}-feedback-r${plan.revision}.json`, JSON.stringify(bundle(), null, 2), "application/json"));
-    $("plan-download").addEventListener("click", () => safelyDownload(`${plan.planId}-r${plan.revision}.md`, [
-      `# ${plan.title}`, `Plan: ${plan.planId} | Revision: ${plan.revision}`, "", plan.summary, "", `Recommendation: ${plan.recommendation}`, `Scope: ${plan.scope}`, plan.changes ? `Changes: ${plan.changes}` : "",
-      ...plan.sections.flatMap(section => [`\n## ${section.title}`, section.summary, ...section.items.flatMap(item => [
-        `\n### ${item.title} (${item.id})`, `Kind: ${item.kind}${item.recommended ? " | Recommended" : ""}`, item.body,
-        item.dependsOn?.length ? `Start after: ${item.dependsOn.join(", ")}` : "", item.preview ? `Approximate layout:\n${item.preview}` : "",
-        ...(item.criteria ?? []).map(text => `Done when: ${text}`), ...(item.evidence ?? []).map(text => `Evidence: ${text}`),
-        ...(item.details ?? []).map(detail => `${detail.title}: ${detail.body}`), ...(item.links ?? []).map(link => `${link.label}: ${link.url}`),
-        item.previewFile ? `Rendered example: ${item.previewFile.label}\nOpen the review HTML to see this example.` : "",
-        item.image ? `Image: ${item.image.alt}\nCaption: ${item.image.caption}\nThe review HTML contains the image.` : ""
-      ])])
-    ].filter(line => line !== "").join("\n\n"), "text/markdown"));
-    $("restore").addEventListener("change", async event => {
-      const file = event.target.files[0];
+
+    for (const choice of document.querySelectorAll("[data-theme-choice]")) choice.addEventListener("click", () => { state.theme = choice.dataset.themeChoice; applyTheme(); save(); });
+    $("ip-overall").addEventListener("input", event => { state.overall = event.target.value; save(); });
+    $("ip-copy").addEventListener("click", copyFeedback);
+    $("ip-copy-2").addEventListener("click", copyFeedback);
+    $("ip-full").addEventListener("click", () => { fullPlan = !fullPlan; renderAll("ip-full"); });
+    $("ip-download").addEventListener("click", () => download(`${plan.planId}-r${plan.revision}-feedback.json`, `${JSON.stringify({ ...state, revision: plan.revision, exportedAt: new Date().toISOString() }, null, 2)}\n`, "application/json"));
+    $("ip-plan-download").addEventListener("click", () => download(`${plan.planId}-r${plan.revision}.md`, planMarkdown(), "text/markdown"));
+    $("ip-restore").addEventListener("change", async event => {
+      const file = event.target.files?.[0];
+      event.target.value = "";
       if (!file) return;
       try {
-        const data = JSON.parse(await file.text());
-        const restored = validateBackup(data);
-        if ((Object.values(entries).some(hasFeedback) || overall.trim()) && !window.confirm("Replace the feedback currently shown in this page with this backup? Download the current feedback first if you need to keep it.")) return;
-        entries = restored;
-        overall = data.overall ?? "";
-        theme = data.theme ?? plan.theme ?? "dark";
-        $("overall").value = overall;
-        applyTheme();
+        const restored = clean(JSON.parse(await file.text()));
+        if (!window.confirm("Replace your current input on this page with the backup?")) { $("ip-action-status").textContent = "Restore canceled."; return; }
+        state = restored;
         save();
-        render();
-        $("action-status").textContent = storageBlocked ? "Backup restored in memory only. Download feedback before closing." : "Feedback restored. Changed proposals still need another review.";
-      } catch (error) { $("action-status").textContent = `Cannot restore feedback: ${error.message}`; }
-      finally { event.target.value = ""; }
-    });
-    window.addEventListener("storage", event => {
-      if (event.key === key || event.key === null) {
-        storageFailure("Another tab changed saved feedback. This tab will not overwrite that copy. Export both copies before restoring one.");
-        updateSummary();
+        renderAll();
+        $("ip-action-status").textContent = "Backup restored.";
+      } catch (error) {
+        $("ip-action-status").textContent = `Cannot restore: ${error.message}`;
       }
     });
-    render();
-    if (location.hash) $(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
+    window.addEventListener("storage", event => {
+      if (event.key !== storageKey || storageBlocked) return;
+      load();
+      renderAll();
+      $("ip-save-status").textContent = "Updated from another tab.";
+    });
+    load();
+    renderAll();
+    if (!storageBlocked) $("ip-save-status").textContent = "Your input saves in this browser.";
   </script>
 </body>
 </html>

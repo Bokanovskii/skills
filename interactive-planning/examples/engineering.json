@@ -1,63 +1,110 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "planId": "example-search-index",
   "revision": 1,
-  "title": "Make project search faster",
-  "summary": "Example proposal. Keep search results current without rebuilding the full index after each edit.",
-  "recommendation": "Let the existing search owner update only changed documents. Keep the current query interface.",
-  "scope": "This example covers indexing, recovery, and proof. It excludes ranking changes and a new search service.",
+  "kind": "engineering",
+  "title": "Make project search faster after an edit",
+  "summary": "Search results take about 40 seconds to show an edit, because each edit starts a full rebuild of the index. This plan sends only the changed documents to the index writer, so results update in about one second.",
+  "recommendation": "Use incremental updates through the existing index writer. Keep the full rebuild only as a recovery tool.",
+  "scope": "This plan covers how edits reach the index, recovery after a failed update, and the proof. It does not change ranking, and it does not add a new search service.",
+  "terms": {
+    "index writer": "The one part of the service that writes to the search index. Other parts send it changes instead of writing to the index themselves.",
+    "full rebuild": "Reading every document again and writing a new index from the start. Today this happens after each edit.",
+    "incremental update": "Writing only the documents that changed. The rest of the index stays as it is.",
+    "drift": "A difference between the documents and the index, for example a deleted document that still shows in search."
+  },
+  "approval": {
+    "covers": "Steps 1 to 5 in this repository, the local tests, and one pull request.",
+    "okay": [
+      { "id": "ok-staging-rebuild", "action": "Run one full rebuild on the shared staging index", "why": "The rebuild takes about 20 minutes. Staging search is slow for other people during that time." }
+    ]
+  },
   "sections": [
+    {
+      "id": "today",
+      "title": "What happens today",
+      "blocks": [
+        {
+          "id": "current-facts",
+          "type": "facts",
+          "title": "Measured on staging",
+          "items": [
+            { "label": "Documents", "value": "About 180,000" },
+            { "label": "Full rebuild time", "value": "35 to 45 seconds" },
+            { "label": "What starts a rebuild", "value": "Every save, rename, or delete of a document" }
+          ],
+          "evidence": ["Staging metrics for the week of 3 November: median rebuild 38 seconds."]
+        },
+        {
+          "id": "why-slow",
+          "type": "note",
+          "title": "Why one edit is slow",
+          "body": "The edit itself is fast. The delay comes from the full rebuild that the save starts. The index writer reads all 180,000 documents again to change one of them. If two people save at the same time, the second rebuild waits for the first one."
+        }
+      ]
+    },
     {
       "id": "approach",
       "title": "Choose the approach",
-      "summary": "Review the proposed owner and the assumption that needs evidence.",
-      "items": [
+      "blocks": [
         {
-          "id": "incremental-index",
-          "kind": "decision",
-          "title": "Update only changed documents",
-          "body": "Keep one index writer. Give it document changes from the existing update path.",
-          "recommended": true,
-          "previewFile": {"path": "previews/search-flow.html", "label": "Proposed architecture - synthetic example", "height": 480, "mobileHeight": 1000},
-          "details": [
-            {"title": "Why this approach", "body": "One writer keeps updates ordered. Reusing the existing search owner avoids a second source of truth."},
-            {"title": "Alternative", "body": "Keep full rebuilds if measurements show that the extra complexity brings no useful improvement."}
-          ],
-          "criteria": ["New, changed, and deleted documents produce the expected search results."]
+          "id": "update-method",
+          "type": "decision",
+          "title": "How do edits reach the index?",
+          "body": "All three options keep one index writer. They differ in how much work each edit causes.",
+          "options": [
+            { "id": "incremental", "label": "Incremental updates", "benefit": "Results update in about one second, and the work per edit is small.", "cost": "The writer needs a recovery path for a failed update.", "recommended": true, "see": "update-flow" },
+            { "id": "batched-rebuild", "label": "Batch rebuilds every 2 minutes", "benefit": "Very little new code.", "cost": "Results can be up to 2 minutes old, and the full rebuild cost stays." },
+            { "id": "background-rebuild", "label": "Rebuild in the background", "benefit": "Saves return at once.", "cost": "Results are still about 40 seconds old, and two rebuilds can overlap." }
+          ]
         },
         {
-          "id": "measure-current-cost",
-          "kind": "assumption",
-          "title": "Measure the current rebuild cost",
-          "body": "The example assumes that full rebuilds cause the delay. Measure that path before implementing this proposal.",
-          "evidence": ["Synthetic example. No repository measurements support this assumption yet."]
+          "id": "update-flow",
+          "type": "visual",
+          "title": "Proposed path for an edit",
+          "body": "An edit goes to the existing update path, then to the one index writer. Nothing else writes to the index.",
+          "previewFile": { "path": "previews/search-flow.html", "label": "Proposed update flow", "height": 420, "mobileHeight": 760 }
+        },
+        {
+          "id": "update-contract",
+          "type": "code",
+          "title": "Change message that the writer accepts",
+          "language": "ts",
+          "code": "type IndexChange =\n  | { kind: \"upsert\"; documentId: string; version: number }\n  | { kind: \"remove\"; documentId: string; version: number };"
+        },
+        {
+          "id": "max-delay",
+          "type": "question",
+          "title": "How old can search results be after an edit?",
+          "body": "The answer sets the alarm for drift. If results can be a few seconds old, the alarm can wait longer before it fires.",
+          "placeholder": "For example: 5 seconds"
         }
       ]
     },
     {
       "id": "delivery",
       "title": "Build and prove the change",
-      "summary": "Keep the work ordered. Prove behavior at the search entry point before rollout.",
-      "items": [
+      "blocks": [
         {
-          "id": "wire-updates",
-          "kind": "step",
-          "title": "Connect edits to the existing index writer",
-          "body": "Add document updates and removals to the current writer. Do not add a competing write path.",
-          "dependsOn": ["incremental-index", "measure-current-cost"],
-          "criteria": ["Updates remain ordered.", "Deleted documents disappear from results.", "A failed update reports its cause."]
+          "id": "build-steps",
+          "type": "steps",
+          "title": "Steps",
+          "items": [
+            { "id": "measure", "title": "Measure the current rebuild cost", "body": "Record the rebuild time and the wait time for two saves at the same time. These numbers are the baseline for the proof.", "criteria": ["The baseline numbers are in the pull request."] },
+            { "id": "wire-updates", "title": "Send edits to the index writer", "body": "Add upsert and remove messages to the existing update path. Remove the call that starts a full rebuild after each save.", "after": ["measure"] },
+            { "id": "recovery", "title": "Recover from a failed update", "body": "If a change fails, the writer retries it three times. After that it marks the document for the nightly full rebuild.", "after": ["wire-updates"], "criteria": ["A test makes one update fail and shows the document in search after recovery."] },
+            { "id": "prove", "title": "Prove the change through public search", "body": "Edit, rename, and delete documents through the API. Then search for them. Restart the service between two edits.", "after": ["recovery"], "criteria": ["Results show each edit within 2 seconds.", "No deleted document appears in search."] },
+            { "id": "open-pr", "title": "Open the pull request", "body": "Include the baseline, the new numbers, and the recovery test.", "after": ["prove"] }
+          ]
         },
         {
-          "id": "prove-recovery",
-          "kind": "step",
-          "title": "Prove recovery before rollout",
-          "body": "Exercise edits, deletions, restart, and a failed update through the public search flow.",
-          "dependsOn": ["wire-updates"],
-          "details": [
-            {"title": "Recovery", "body": "If incremental updates fail, keep existing search reads available. Use the existing rebuild operation to recover the index."},
-            {"title": "Rollout", "body": "Compare the measured update cost and result correctness with the current path. Do not claim a speed improvement without measurements."}
-          ],
-          "criteria": ["The search flow returns expected results after restart.", "Recovery does not alter source documents."]
+          "id": "delivery-risks",
+          "type": "risks",
+          "title": "Risks",
+          "items": [
+            { "title": "Index drift", "effect": "A failed update leaves an old version of a document in search.", "response": "The writer retries, then the nightly full rebuild repairs the document. An alarm fires if drift lasts longer than the agreed delay." },
+            { "title": "Edits arrive out of order", "effect": "An older version overwrites a newer one.", "response": "Each change carries a version number. The writer ignores a change that is older than the stored version." }
+          ]
         }
       ]
     }

@@ -6,7 +6,7 @@ Each skill lives in its own folder with a `SKILL.md` entry point.
 
 | Skill | Purpose |
 | --- | --- |
-| [interactive-planning](interactive-planning/SKILL.md) | Create interactive galleries for design proposals and engineering plans, with comments and feedback exports. |
+| [interactive-planning](interactive-planning/SKILL.md) | Create review pages for design proposals and engineering plans. The user answers decisions, comments, approves, and copies short feedback. |
 | [simple-english](simple-english/SKILL.md) | Write plans, documentation, and replies in plain English. |
 | [autoreview](autoreview/SKILL.md) | Run structured, independent code reviews with explicit scope and severity. |
 | [impeccable](impeccable/SKILL.md) | Plan, review, and improve frontend design, usability, and visual details. |
@@ -84,9 +84,13 @@ From this repository, run its dependency-free checks:
 node --test interactive-planning/tests/render.test.mjs
 ```
 
-The [format reference](interactive-planning/references/format.md) also explains browser checks.
-Those checks use an existing Playwright installation.
-Keep their generated evidence outside this public repository.
+Run the browser checks only after a change to the page template or the renderer.
+They need an existing Playwright installation, so run them from a project directory whose `node_modules` has Playwright.
+Pass a proof directory outside this public repository:
+
+```bash
+node "$HOME/.copilot/skills/interactive-planning/tests/browser.mjs" /tmp/interactive-planning-proof
+```
 
 ## Third-party material
 

@@ -1,64 +1,72 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "planId": "example-project-picker",
   "revision": 1,
+  "kind": "design",
   "theme": "dark",
   "title": "Choose a project with less searching",
-  "summary": "Compare the proposed picker states. Each example is a static HTML recreation with its own feedback field.",
-  "recommendation": "Use a searchable list with a clear selected row. Keep feedback beside each proposed state.",
-  "scope": "This example reviews layout and messages. It does not implement a project picker or claim current product behavior.",
+  "summary": "People open the project picker many times a day. Today it starts empty, so they type the same names again and again. This proposal shows recent projects first and gives each state a clear message and a next step.",
+  "recommendation": "Show recent projects before the first search. Keep the search field available in every state. Give a failed request a Retry button that keeps the search text.",
+  "scope": "This proposal covers the layout and the messages of the picker. It does not change which projects a person can open, and it does not change search ranking.",
+  "terms": {
+    "empty state": "What the picker shows when a search finds no projects. It tells the person what happened and what to try next.",
+    "recent projects": "The last five projects that this person opened on this device, newest first."
+  },
+  "approval": {
+    "covers": "Build the four picker states in the web app, with one test for each state. The agent opens one pull request."
+  },
   "sections": [
     {
-      "id": "proposed-states",
-      "title": "Review the proposed states",
-      "summary": "Review the layout and messages at full size. These are proposed states, not screenshots of an existing product.",
-      "items": [
-        {
-          "id": "picker-ready",
-          "kind": "design",
-          "title": "Recent projects stay visible",
-          "body": "Show recent projects before the first search. Keep the selected project clear without relying on color alone.",
-          "recommended": true,
-          "previewFile": {"path": "previews/picker-ready.html", "label": "Proposed state - static HTML recreation", "height": 520},
-          "criteria": ["Keyboard users can move between projects.", "The selected row includes a text label."],
-          "details": [{"title": "Interaction", "body": "Keep focus in the search field while filtering. Announce the result count without moving focus."}]
-        },
-        {
-          "id": "picker-empty",
-          "kind": "design",
-          "title": "Explain an empty search",
-          "body": "Keep the query visible. Offer a clear way to try another search.",
-          "previewFile": {"path": "previews/picker-empty.html", "label": "Proposed empty search - static HTML recreation", "height": 430},
-          "criteria": ["The query remains visible.", "Clear search returns to recent projects."]
-        },
-        {
-          "id": "picker-loading",
-          "kind": "design",
-          "title": "Show that results are loading",
-          "body": "Keep the search field available. Announce that the project list is loading.",
-          "previewFile": {"path": "previews/picker-loading.html", "label": "Proposed loading state - static HTML recreation", "height": 430}
-        },
-        {
-          "id": "picker-error",
-          "kind": "design",
-          "title": "Give a failed request a next step",
-          "body": "Explain that the request failed. Preserve the search and let the user retry.",
-          "previewFile": {"path": "previews/picker-error.html", "label": "Proposed failed request - static HTML recreation", "height": 430},
-          "criteria": ["Retry preserves the query.", "The page does not display a failed request as an empty result."]
-        }
+      "id": "states",
+      "title": "The four picker states",
+      "summary": "Each preview is a static HTML copy of the proposed state. It is not the running product.",
+      "blocks": [
+        { "id": "picker-ready", "type": "visual", "title": "Recent projects stay visible", "body": "The picker opens with recent projects. The selected row has a check mark and a border, so the selection does not depend on color alone.", "previewFile": { "path": "previews/picker-ready.html", "label": "Proposed ready state", "height": 520, "mobileHeight": 560 } },
+        { "id": "picker-empty", "type": "visual", "title": "Explain an empty search", "body": "The empty state repeats the search text and offers to clear it.", "previewFile": { "path": "previews/picker-empty.html", "label": "Proposed empty search", "height": 400, "mobileHeight": 400 } },
+        { "id": "picker-loading", "type": "visual", "title": "Show that results are loading", "body": "The search field stays active while the list loads. Screen readers hear that the list is loading.", "previewFile": { "path": "previews/picker-loading.html", "label": "Proposed loading state", "height": 410, "mobileHeight": 400 } },
+        { "id": "picker-error", "type": "visual", "title": "Give a failed request a next step", "body": "The message says that the request failed, keeps the search text, and offers Retry.", "previewFile": { "path": "previews/picker-error.html", "label": "Proposed failed request", "height": 420, "mobileHeight": 400 } }
       ]
     },
     {
-      "id": "design-decisions",
-      "title": "Resolve before implementation",
-      "summary": "Record the decision that changes which projects the picker can show.",
-      "items": [
+      "id": "choices",
+      "title": "Choices for you",
+      "blocks": [
         {
-          "id": "picker-permissions",
-          "kind": "question",
-          "title": "Which projects can the user see?",
-          "body": "Use the existing permission owner. Establish whether unavailable projects are hidden or shown with an explanation.",
-          "details": [{"title": "Evidence needed", "body": "Read the current permission contract before choosing a display rule. This example does not propose changing access."}]
+          "id": "first-view",
+          "type": "decision",
+          "title": "What does the picker show before the first search?",
+          "body": "Most people open one of a few projects. A list of recent projects saves typing for them. A search-only picker is simpler but makes every person type.",
+          "options": [
+            { "id": "recent", "label": "Recent projects", "benefit": "Most people pick a project with one click.", "cost": "The picker must store a short list on each device.", "recommended": true, "see": "picker-ready" },
+            { "id": "search-only", "label": "Search field only", "benefit": "Nothing to store, and the first view is very simple.", "cost": "People type a name every time." }
+          ]
+        },
+        {
+          "id": "failed-request",
+          "type": "decision",
+          "title": "How does a failed request recover?",
+          "options": [
+            { "id": "retry-button", "label": "A Retry button", "benefit": "The person controls when to try again, and the message stays until it works.", "cost": "One more click after a short network problem.", "recommended": true, "see": "picker-error" },
+            { "id": "auto-retry", "label": "Retry by itself after 3 seconds", "benefit": "Short network problems fix themselves without a click.", "cost": "The list can change while the person reads it." }
+          ]
+        },
+        {
+          "id": "state-copy",
+          "type": "comparison",
+          "title": "Messages in each state",
+          "columns": ["What the person sees", "Next action"],
+          "rows": [
+            { "option": "Empty search", "cells": ["No projects match \"atlas\".", "Clear the search"] },
+            { "option": "Loading", "cells": ["Loading projects", "Keep typing"] },
+            { "option": "Failed request", "cells": ["Projects did not load.", "Retry"] }
+          ]
+        },
+        {
+          "id": "hidden-projects",
+          "type": "question",
+          "title": "Do projects that a person cannot open appear in the list?",
+          "body": "The permission service already decides who can open a project. The picker only needs to know whether to hide those projects or show them as locked.",
+          "placeholder": "For example: hide them, or show them with a lock and the name of the owner"
         }
       ]
     }

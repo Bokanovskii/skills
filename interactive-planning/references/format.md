@@ -1,116 +1,117 @@
-# Plan and feedback format
+# Plan format
 
-The renderer consumes a UTF-8 JSON file.
-All prose fields contain plain text, not Markdown or HTML.
-The separate `previewFile` field embeds an authored static HTML example.
-Use schema version `1`.
+The renderer reads one UTF-8 JSON file with `schemaVersion: 2`. Version 1 plans are not supported.
+All prose fields are plain text, not Markdown or HTML. The page never runs plan text as HTML.
+The renderer rejects unknown fields and names the field and the fix in its error.
 
-## Plan
-
-The plan has these fields:
+## Plan fields
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `schemaVersion` | `1` | Format version |
-| `planId` | String | Unique proposal identity, unchanged during revision |
-| `revision` | Positive integer | Proposal revision |
-| `title` | String | Plain task title |
-| `summary` | String | Intended outcome |
-| `recommendation` | String | Recommended approach and reason |
-| `scope` | String | Included and excluded work |
-| `changes` | String, optional | Changes since the earlier revision |
-| `theme` | `dark` or `light`, optional | Gallery style, dark by default |
+| `schemaVersion` | `2` | Format version |
+| `planId` | ID | Plan identity. It stays the same for every revision. |
+| `revision` | Positive integer | Plan revision. Increase it by one when the content changes. |
+| `kind` | `design`, `engineering`, or `mixed`, optional | Page label |
+| `title` | Text | Plain task title |
+| `summary` | Text | The problem, its cost, and the outcome |
+| `recommendation` | Text | The recommended approach and the reason |
+| `scope` | Text | The work that is in and the work that is out |
+| `changes` | Text, optional | What changed since the earlier revision |
+| `theme` | `dark` or `light`, optional | Default page theme |
+| `terms` | Object, optional | Up to 80 terms. A key has up to 60 characters. A definition has fewer than 600 characters. |
+| `approval` | Object, optional | What approval covers and the high-risk okay list |
 | `sections` | Array | At least one section |
+| `replies` | Array, optional | Your replies to the user's comments |
 
-Use lowercase letters, digits, and hyphens for IDs.
-Start each ID with a letter.
-Keep section and item IDs unique across the whole plan.
-Use a task prefix or random suffix for `planId` to avoid collisions between repositories.
+An ID uses lowercase letters, digits, and hyphens, starts with a letter, and has at most 64 characters.
+IDs that start with `ip-` belong to the page.
+Section, block, step, and okay IDs are unique across the whole plan.
+Add a task word or a short random suffix to `planId`, because the browser stores feedback under that ID.
 
-Every section contains `id`, `title`, `summary`, and `items`.
-Every section needs at least one item.
-The summary explains what the section helps the reader decide or understand.
-
-Every item contains `id`, `kind`, `title`, and `body`.
-Use one of these kinds: `decision`, `option`, `step`, `fact`, `assumption`, `question`, `risk`, or `design`.
-Every item supports comments and a review decision.
-
-Optional item fields:
+## Approval
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `recommended` | Boolean | Mark a recommended choice |
-| `dependsOn` | Array of item IDs | Required earlier work |
-| `details` | Array of `{title, body}` | Expandable supporting text |
-| `criteria` | Array of strings | Observable acceptance criteria |
-| `evidence` | Array of strings | Source references and observed facts |
-| `links` | Array of `{label, url}` | Explicit HTTP or HTTPS references |
-| `preview` | String | Plain text technical sample, not the default for visual proposals |
-| `previewFile` | `{path, label, height?, mobileHeight?}` | Local static HTML example in an isolated frame |
-| `image` | `{path, mobilePath?, alt, caption}` | Local PNG, JPEG, or WebP image, with an optional narrow version |
+| `covers` | Text, optional | The work that approval lets you do |
+| `okay` | Array, optional | At most 8 high-risk actions |
+| `approvedIn` | Revision, optional | The revision that the user approved |
 
-Resolve image paths relative to the input JSON file.
-The renderer embeds the bytes, so the resulting HTML can travel alone.
-Captions must distinguish current evidence from a proposed or approximate rendering.
-Use `mobilePath` for a separate capture below a viewport width of 768 pixels.
-Both image versions become embedded data, so neither needs a network request.
+Each okay entry has `id`, `action`, and `why`. Set `granted: true` after the user turns on the toggle.
+Put only high-risk actions in the list. Low and medium risk work inside `covers` needs no okay.
 
-Resolve `previewFile.path` relative to the input JSON file.
-Use an explicit `label`, such as "Proposed state - static HTML recreation".
-Frame heights are integers from 180 to 1800 pixels.
-The default height is 400 pixels, and `mobileHeight` defaults to `height`.
-Make sure that the whole example fits at both viewport sizes.
+The renderer removes `approvedIn` when the steps, the scope, or the okay list change after approval. The page then asks the user to approve again. The reset stays until you set `approvedIn` to a newer revision.
 
-Preview files need inline CSS and embedded images.
-The renderer blocks scripts, forms, network resources, and access to the parent page.
-Comments, prose, and imported feedback never become preview HTML.
+## Sections and blocks
 
-Dependencies must reference existing items and must not form a cycle.
-Array order controls presentation, not dependency meaning.
-The renderer rejects missing IDs, duplicate IDs, unsafe links, and invalid field types.
+A section has `id`, `title`, optional `summary`, and `blocks`.
+Every block has `id` and `type`. These fields are optional on every block:
 
-## Feedback
+| Field | Meaning |
+| --- | --- |
+| `title` | Block heading. A visual, a decision, and a question need one. |
+| `body` | Plain explanation |
+| `details` | List of `{title, body}` entries that start closed |
+| `evidence` | List of text entries, such as a source or a measurement |
+| `links` | List of `{label, url}`. A URL must use HTTP or HTTPS without credentials. |
 
-"Download feedback" exports JSON with `schemaVersion`, `planId`, `revision`, `exportedAt`, `entries`, and `context`.
-New exports also include `overall` for general comments and `theme` for the gallery preference.
-Earlier version 1 backups without these fields remain supported.
-`context` includes the current title, summary, recommendation, scope, and changes.
-`entries` contain all items with feedback, including removed items.
+## Content blocks
 
-Each entry records the item ID, comment, decision, saved item snapshot, reviewed revision, timestamp, current item, and review state.
-Its `context` records the title, summary, recommendation, and scope at review time.
-The snapshot preserves the text against which the user recorded feedback.
-The current item is `null` when that item no longer exists.
-Review states are `current`, `changed`, and `removed`.
+The user reads content blocks. Each one has a Comment button.
 
-Decision values are `undecided`, `accept`, `changes`, and `discuss`.
-These values record review preferences, not execution authority.
-The readable export includes context and old and current item text for changed decisions.
+| Type | Fields |
+| --- | --- |
+| `facts` | `items`: list of `{label, value}` |
+| `steps` | `items`: list of steps |
+| `risks` | `items`: list of `{title, effect, response}` |
+| `comparison` | `columns`: 1 to 6 headings. `rows`: 2 or more `{option, cells}` entries with one cell for each column. |
+| `visual` | Exactly one of `image` or `previewFile` |
+| `code` | `code` and optional `language` |
+| `note` | `body` is required |
 
-## Revision and recovery
+A step has `id` and `title`. It can also have `body`, `after` (a list of step IDs that come first), `criteria`, `evidence`, `details`, `links`, `status`, and `statusNote`.
+`status` is `todo`, `working`, `done`, or `blocked`. The renderer rejects an unknown step in `after` and a cycle.
+The page hides the "After" line when a step waits only for the step directly above it.
+The user can comment on each step and on the whole steps block.
 
-An item changes when its reviewable fields change.
-Object key order does not change item identity.
-Comments do not renew an earlier acceptance of changed content.
-Changes to the plan title, summary, recommendation, or scope also require another review.
+An `image` has `path`, `alt`, `caption`, and optional `mobilePath`. Use a local PNG, JPEG, or WebP file.
+A `previewFile` has `path`, `label`, and optional `height` and `mobileHeight` from 180 to 1800 pixels. The default is 400.
+The page shows the preview in a sandboxed frame with no scripts, forms, or network access.
+A relative path starts at the directory of `plan.json`.
 
-Changing the decision explicitly records a review of the current content.
-The "Keep decision for this revision" action explicitly renews an earlier decision.
-Removed feedback stays in history and exports.
+## Review blocks
 
-Restoring a backup requires the same `planId` and a supported schema version.
-The page rejects malformed records before writing browser storage.
-Restoring feedback replaces the current feedback only after confirmation when feedback already exists.
-Download a backup before moving between browsers, origins, machines, or sessions.
+The user answers review blocks. They appear in the Your input list at the top of the page.
 
-## Maintenance
+A `decision` has `title` and 2 to 4 `options`. An option has `id`, `label`, `benefit`, and `cost`. It can also have `recommended: true` on one option and `see` with the ID of a visual block.
+The page adds a "Something else" option with the ID `other`, so do not use that ID.
+After the user decides, set `answer` to `{option}` or `{option, note}`. An `other` answer needs a note.
 
-Run `node --test "<skill-directory>/tests/render.test.mjs"` after renderer changes.
-Run `node "<skill-directory>/tests/browser.mjs" "<proof-directory>"` from a directory with Playwright available after template changes.
-The browser test uses an existing Playwright installation and does not install dependencies.
+A `question` has `title` and an optional `placeholder`. It is optional for the user. After the user answers, set `answer` to the text.
 
-The browser proof covers rendering, persistence, revision handling, exports, restore, storage errors, and narrow layouts.
-It creates synthetic pages and screenshots in the named proof directory.
-Inspect those screenshots before sharing the template.
-For a template cutover, pass a previously generated review HTML file as the final argument to `tests/browser.mjs`.
-The additional flow records feedback in that page, replaces its template at the same address, and makes sure that the saved feedback survives.
+A decision that has an answer shows one "Chosen" row. The user can change it.
+
+## Replies
+
+Each reply answers one comment from the feedback:
+
+```json
+{ "to": "why-slow.1", "comment": "Show the wait time for two saves.", "status": "changed", "text": "Added the wait time for two saves." }
+```
+
+`to` is the comment ID from the feedback. `status` is `answered`, `changed`, or `not-changed`. `revision` is optional and defaults to the current revision.
+The page shows a replied comment as a closed thread and removes it from the feedback. The user can open it, reply, or reopen it.
+
+## Change tracking
+
+The renderer reads the earlier page at the output path. It marks each block and step that is new or changed in this revision.
+The page collapses unchanged blocks, settled decisions, and resolved comments. A Show full plan button shows everything.
+Status, answers, and okay grants do not count as changes.
+The renderer fails if the earlier page has a higher revision. It never overwrites the input plan or the skill template.
+
+## Browser storage
+
+The page saves input under `interactive-planning:v2:<planId>` in browser storage for the page origin.
+Another browser, private browsing, or a different preview address does not see that copy.
+If storage fails, the page keeps input in memory and shows a warning.
+Download backup saves the input as JSON. Restore a backup loads it after the user confirms.
+Download plan saves the plan as Markdown.
