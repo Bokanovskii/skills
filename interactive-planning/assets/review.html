@@ -315,6 +315,7 @@ Planning additions are isolated in the second style block. See references/templa
     const openSections = new Set();
     const editing = new Set();
     const composing = new Map();
+    const previewHtml = new WeakMap();
 
     function element(tag, text, className) {
       const node = document.createElement(tag);
@@ -571,7 +572,16 @@ Planning additions are isolated in the second style block. See references/templa
           node.append(row);
         }
         root.append(node);
+        for (const frame of node.querySelectorAll("iframe.ip-preview")) writePreview(frame);
       }
+    }
+    // Some embedded browsers, such as the app's WebKit preview canvas, never load srcdoc frames.
+    // Writing into the frame's own blank document works everywhere; the sandbox still blocks scripts, forms, and navigation.
+    function writePreview(frame) {
+      const doc = frame.contentDocument;
+      doc.open();
+      doc.write(previewHtml.get(frame));
+      doc.close();
     }
     function headRow(unit, title, extra = []) {
       const head = element("div", undefined, "ip-head");
@@ -921,10 +931,9 @@ Planning additions are isolated in the second style block. See references/templa
       if (block.previewFile) {
         canvas.classList.add("ip-flush");
         const frame = element("iframe", undefined, "ip-preview");
-        frame.setAttribute("sandbox", "");
-        frame.srcdoc = block.previewFile.html;
+        frame.setAttribute("sandbox", "allow-same-origin");
+        previewHtml.set(frame, block.previewFile.html);
         frame.title = block.previewFile.label;
-        frame.loading = "lazy";
         frame.style.setProperty("--h", `${block.previewFile.height}px`);
         frame.style.setProperty("--mh", `${block.previewFile.mobileHeight}px`);
         canvas.append(frame);

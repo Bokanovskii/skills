@@ -116,6 +116,8 @@ try {
   const designPage = watch(await context.newPage());
   await designPage.goto(`${origin}/design.html`);
   assert.equal(await designPage.locator("iframe.ip-preview").count(), 4);
+  const previewText = await designPage.evaluate(() => [...document.querySelectorAll("iframe.ip-preview")].map(frame => frame.contentDocument.body.innerText.trim()));
+  assert.ok(previewText.every(Boolean), "every preview frame shows its content");
   assert.equal(await designPage.locator('a[href="#picker-ready"]').count(), 1, "an option links to its example");
 
   const blocked = await browser.newContext();
