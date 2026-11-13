@@ -18,85 +18,133 @@ Planning additions are isolated in the second style block. See references/templa
   </style>
   <style>
     /* Planning additions. The original gallery rules above stay unchanged. */
+    /* Softer palette: slate surfaces and a muted coral accent that does not read as an error. */
+    :root[data-theme="dark"] {
+      --page: #121419; --panel: #191c22; --bg: #15171c; --bg-elevated: #1f232a; --bg-hover: #252a33; --bg-muted: #252a33; --card: #1c1f26;
+      --text: #c4c7ce; --text-strong: #eef0f3; --muted: #8d94a0;
+      --border: #23272f; --border-strong: #2f3540;
+      --accent: #ef8f74; --accent-subtle: rgba(239, 143, 116, .12);
+      --primary: #e8866b; --primary-fg: #1c120e;
+      --ok: #5fc48c; --warn: #e2b24f; --danger: #ef8080; --info: #82aef0;
+      --ok-subtle: rgba(95, 196, 140, .1); --warn-subtle: rgba(226, 178, 79, .1); --danger-subtle: rgba(239, 128, 128, .1); --info-subtle: rgba(130, 174, 240, .1);
+      --shadow: 0 12px 32px rgba(0, 0, 0, .35);
+    }
+    :root[data-theme="light"] {
+      --page: #f6f4f0; --panel: #fff; --bg: #faf9f6; --bg-elevated: #fff; --bg-hover: #f0ede7; --bg-muted: #eeebe5; --card: #fff;
+      --text: #3d3a35; --text-strong: #1f1d1a; --muted: #6b675f;
+      --border: #ebe7e0; --border-strong: #ddd8cf;
+      --accent: #c0573d; --accent-subtle: color-mix(in srgb, #c0573d 10%, #fff);
+      --primary: #c0573d; --primary-fg: #fff;
+      --shadow: 0 12px 32px rgba(60, 40, 20, .1);
+    }
+    ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--text-strong); }
+    .g-bar { border-bottom-color: var(--border); }
+    .g-kicker { letter-spacing: 0; text-transform: none; font-weight: 500; font-size: 13px; }
+    .g-box { border-color: var(--border); }
+    .ex { border-color: var(--border); }
+    .ex-stage { border-right-color: var(--border); }
+    .ex-strip { letter-spacing: 0; text-transform: none; font-size: 12px; font-weight: 500; }
+    .g-section { margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border-strong); }
+    .g-section__head h2 { font-size: 22px; }
+    .ip-sec-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px 16px; }
+    .ip-sec-head > div:first-child { min-width: 0; flex: 1 1 420px; }
+    .ip-sec-status { flex: none; margin-top: 4px; }
+    .ip-sec-status:empty { display: none; }
     [hidden] { display: none !important; }
     a:not(.g-btn) { color: var(--info); }
     .g-nav a { color: var(--muted); }
     .ip-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .ip-intro { align-self: start; }
+    .ip-choice a { color: var(--accent); font-size: 12px; text-decoration: none; }
+    .ip-choice a:hover { text-decoration: underline; }
     .ip-intro p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.55; }
     .ip-intro p:last-child { margin-bottom: 0; }
-    .ip-label { display: block; margin-bottom: 2px; font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .ip-label { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 600; color: var(--text-strong); }
     .ip-term { border: 0; border-bottom: 1px dotted var(--info); padding: 0; background: none; font: inherit; color: var(--text-strong); cursor: help; }
     .ip-tip { display: inline-block; max-width: 420px; margin: 2px 0 2px 6px; padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--bg-elevated); box-shadow: var(--shadow); font-size: 12px; line-height: 1.5; color: var(--text); white-space: normal; }
     .g-box .ip-input { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
-    .ip-input li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); font-size: 13px; }
+    .ip-input li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 8px; background: var(--bg-hover); font-size: 13px; }
     .ip-input a { min-width: 0; color: var(--text-strong); text-decoration: none; overflow-wrap: anywhere; }
     .ip-input a:hover { text-decoration: underline; }
-    .ip-chip { flex: none; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
-    .ip-chip--need { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 50%, transparent); background: var(--warn-subtle); }
-    .ip-chip--done { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); background: var(--ok-subtle); }
-    .ip-chip--upd { color: var(--info); border-color: color-mix(in srgb, var(--info) 50%, transparent); background: var(--info-subtle); }
-    .ip-chip--bad { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, transparent); background: var(--danger-subtle); }
+    .ip-chip { flex: none; padding: 2px 9px; border: 1px solid transparent; border-radius: 999px; background: var(--bg-hover); font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .ip-chip--need { color: var(--warn); background: var(--warn-subtle); }
+    .ip-chip--done { color: var(--ok); background: var(--ok-subtle); }
+    .ip-chip--upd { color: var(--info); background: var(--info-subtle); }
+    .ip-chip--bad { color: var(--danger); background: var(--danger-subtle); }
     .ip-progress { height: 6px; margin-top: 12px; overflow: hidden; border-radius: 999px; background: var(--bg-muted); }
-    .ip-progress span { display: block; height: 100%; background: var(--primary); }
+    .ip-progress span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
     .ip-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
-    .ip-card { min-width: 0; margin-top: 14px; padding: 18px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--panel); overflow-wrap: anywhere; scroll-margin-top: 64px; }
-    .ip-card--note { border-left: 3px solid var(--info); }
-    .ip-card h3 { margin: 8px 0 6px; font-size: 16px; line-height: 1.35; color: var(--text-strong); }
+    .ip-card { min-width: 0; margin-top: 16px; padding: 20px 24px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--panel); overflow-wrap: anywhere; scroll-margin-top: 64px; }
+    .ip-card--note { border-color: color-mix(in srgb, var(--info) 18%, var(--border)); background: color-mix(in srgb, var(--info) 6%, var(--panel)); }
+    .ip-card.is-open { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+    .ip-card h3 { margin: 0; font-size: 16.5px; line-height: 1.35; color: var(--text-strong); }
+    .ip-head + p, .ip-head + .ip-text { margin-top: 6px; }
     .ip-card p { margin: 0 0 10px; font-size: 13.5px; line-height: 1.55; }
-    .ip-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-    .ip-kind { font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .ip-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 6px; }
+    .ip-head h3 { flex: 1 1 260px; min-width: 0; }
+    .ip-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ip-lang { display: block; margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
     .ip-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
-    .ip-choice { display: grid; grid-template-columns: auto 1fr; gap: 4px 8px; align-content: start; padding: 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--bg); font-size: 12.5px; line-height: 1.5; cursor: pointer; }
-    .ip-choice:hover { border-color: var(--muted); }
-    .ip-choice.is-on { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary) inset; background: var(--accent-subtle); }
-    .ip-choice input { margin: 3px 0 0; accent-color: var(--primary); }
+    .ip-choice { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-content: start; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); font-size: 12.5px; line-height: 1.5; cursor: pointer; }
+    .ip-choice:hover { border-color: var(--border-strong); background: var(--bg-hover); }
+    .ip-choice.is-on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; background: var(--accent-subtle); }
+    .ip-choice input { align-self: start; margin: 3px 0 0; accent-color: var(--accent); }
+    .ex-meta > a { display: inline-block; margin-bottom: 10px; color: var(--muted); font-size: 12px; text-decoration: none; }
+    .ex-meta > a::before { content: "↳ "; }
+    .ex-meta > a:hover { color: var(--accent); text-decoration: underline; }
     .ip-choice b { display: block; color: var(--text-strong); font-size: 13px; }
     .ip-choice p { margin: 4px 0 0; font-size: 12.5px; }
-    .ip-rec { display: block; font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--accent); }
+    .ip-rec { display: inline-block; margin-bottom: 4px; padding: 1px 8px; border-radius: 999px; background: var(--ok-subtle); font-size: 11px; font-weight: 600; color: var(--ok); }
     .ip-cons { color: var(--muted); }
     .ip-field { display: grid; gap: 6px; margin-top: 10px; }
     .ip-field label { font-size: 12px; font-weight: 600; color: var(--muted); }
-    .ip-field textarea, .ip-field select { width: 100%; border: 1px solid var(--border-strong); border-radius: 8px; padding: 8px 10px; background: var(--bg); color: var(--text-strong); font: inherit; font-size: 13px; line-height: 1.45; }
+    .ip-field textarea, .ip-field select { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; background: var(--bg); color: var(--text-strong); font: inherit; font-size: 13px; line-height: 1.45; }
     .ip-field textarea { min-height: 64px; resize: vertical; }
     .ip-field select { width: auto; max-width: 100%; }
-    .ip-settled { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-size: 13px; }
+    .ip-settled { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--ok-subtle); font-size: 13px; }
     .ip-settled span { flex: 1; min-width: 0; color: var(--text-strong); }
     .ip-seg { display: inline-flex; flex-wrap: wrap; overflow: hidden; border: 1px solid var(--border-strong); border-radius: 8px; }
     .ip-seg button { border: 0; border-left: 1px solid var(--border-strong); padding: 7px 14px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
     .ip-seg button:first-child { border-left: 0; }
-    .ip-seg button[aria-checked="true"] { background: var(--bg-hover); color: var(--text-strong); box-shadow: inset 0 -2px 0 var(--primary); }
+    .ip-seg button[aria-checked="true"] { background: var(--accent-subtle); color: var(--accent); }
     .ip-okay { display: grid; gap: 0; margin: 10px 0 14px; padding: 0; list-style: none; }
     .ip-okay li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 13px; }
     .ip-okay li p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
     .ip-okay b { color: var(--text-strong); }
     .ip-switch { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--text-strong); cursor: pointer; }
-    .ip-switch input { width: 16px; height: 16px; accent-color: var(--primary); }
+    .ip-switch input { width: 16px; height: 16px; accent-color: var(--accent); }
     .ip-steps { margin: 10px 0 0; padding: 0; list-style: none; }
     .ip-step { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 6px 10px; align-items: start; padding: 10px 4px; border-top: 1px solid var(--border); scroll-margin-top: 64px; }
     .ip-step:first-child { border-top: 0; }
-    .ip-num { display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--border-strong); border-radius: 50%; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
-    .ip-num--done { border-color: var(--ok); background: var(--ok-subtle); color: var(--ok); }
+    .ip-num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--bg-hover); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .ip-num--done { background: var(--ok-subtle); color: var(--ok); }
     .ip-step b { font-size: 13.5px; color: var(--text-strong); }
     .ip-step p { margin: 3px 0 0; font-size: 12.5px; }
     .ip-meta { margin-top: 4px; font-size: 11.5px; color: var(--muted); }
     .ip-side { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px; }
     .ip-step > .ip-thread-wrap { grid-column: 2 / -1; }
-    .ip-cbtn { border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; background: transparent; color: var(--muted); font: inherit; font-size: 11.5px; white-space: nowrap; cursor: pointer; }
-    .ip-cbtn:hover { border-color: var(--border-strong); color: var(--text-strong); }
-    .ip-cbtn--has { border-color: var(--border-strong); color: var(--text-strong); }
+    .ip-cbtn { border: 0; border-radius: 6px; padding: 4px 8px; background: transparent; color: var(--muted); font: inherit; font-size: 12px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+    .ip-cbtn:hover { background: var(--bg-hover); color: var(--text-strong); }
+    .ip-cbtn--has { background: var(--accent-subtle); color: var(--accent); }
+    .ip-actions .ip-cbtn:first-child { margin-left: -8px; }
+    /* Step comment buttons appear on hover or focus where the device can hover. Touch devices always show them. */
+    @media (hover: hover) {
+      .ip-step .ip-side .ip-cbtn:not(.ip-cbtn--has) { opacity: 0; transition: opacity .15s ease-out; }
+      .ip-step:hover .ip-side .ip-cbtn, .ip-step:focus-within .ip-side .ip-cbtn { opacity: 1; }
+    }
     .ip-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
     .ip-thread-wrap { display: grid; gap: 8px; }
     .ip-thread-wrap:not(:empty) { margin-top: 10px; }
     .ip-thread-wrap:empty { display: none; }
-    .ip-thread { display: grid; gap: 8px; padding-left: 12px; border-left: 2px solid var(--border-strong); font-size: 12.5px; }
-    .ip-thread--open { border-left-color: var(--accent); }
+    .ip-thread { display: grid; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 12.5px; }
+    .ip-thread--open { background: var(--accent-subtle); }
     .ip-thread summary { cursor: pointer; color: var(--muted); }
     .ip-thread summary b { color: var(--ok); font-weight: 600; }
     .ip-thread[open] summary { margin-bottom: 8px; }
     .ip-thread .ip-msg { margin: 0; font-size: 12.5px; line-height: 1.5; }
     .ip-who { display: block; font-size: 11px; color: var(--muted); }
     .ip-msg--agent .ip-who { color: var(--info); }
-    .ip-compose { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border-strong); border-radius: 10px; background: var(--bg); }
+    .ip-compose { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
     .ip-compose .ip-field { margin: 0; }
     .ip-card .g-fine { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
     .ip-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -111,16 +159,16 @@ Planning additions are isolated in the second style block. See references/templa
     .ip-table th, .ip-table td { padding: 8px 10px; border-top: 1px solid var(--border); text-align: left; vertical-align: top; }
     .ip-table thead th { border-top: 0; font-size: 12px; color: var(--muted); }
     .ip-table tbody th { color: var(--text-strong); }
-    .ip-code { overflow: auto; margin: 8px 0 0; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.5; }
+    .ip-code { overflow: auto; margin: 8px 0 0; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--bg); font-family: var(--mono); font-size: 12px; line-height: 1.5; }
     .ip-more { margin-top: 8px; font-size: 12.5px; }
     .ip-more summary { cursor: pointer; color: var(--muted); }
     .ip-more h4 { margin: 10px 0 4px; font-size: 12.5px; color: var(--text-strong); }
     .ip-more p, .ip-more li { font-size: 12.5px; }
     .ip-more ul { margin: 0; padding-left: 20px; }
-    .ip-diff { margin-top: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .ip-diff { margin-top: 8px; padding: 10px 12px; border: 0; border-radius: 10px; background: var(--bg); font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
     .ip-diff del { color: var(--danger); background: var(--danger-subtle); }
     .ip-diff ins { color: var(--ok); background: var(--ok-subtle); text-decoration: none; }
-    .ip-collapsed { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 10px 14px; border: 1px dashed var(--border-strong); border-radius: 12px; font-size: 13px; color: var(--muted); }
+    .ip-collapsed { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; color: var(--muted); }
     .ip-preview { display: block; width: 100%; height: var(--h); border: 0; }
     .ex-canvas.ip-flush { padding: 0; }
     .ex-canvas figure { margin: 0; }
@@ -162,10 +210,6 @@ Planning additions are isolated in the second style block. See references/templa
         <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
       </div>
     </div>
-    <div class="g-banner" role="note">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-      <div><strong>How approval works.</strong> Approval lets the agent carry out the whole plan without asking again. It still stops for actions you have not okayed and for host permission prompts.</div>
-    </div>
     <div id="ip-storage" class="g-warn" role="status" hidden></div>
     <div id="ip-reset" class="g-warn" role="status" hidden></div>
     <div class="g-intro">
@@ -184,7 +228,7 @@ Planning additions are isolated in the second style block. See references/templa
     </div>
     <div id="ip-sections"></div>
     <section class="g-section" id="ip-approval" aria-labelledby="ip-approval-title">
-      <div class="g-section__head"><h2 id="ip-approval-title">Approval</h2><p>Choose one. Your choice and your okay toggles go into the copied feedback.</p></div>
+      <div class="g-section__head"><h2 id="ip-approval-title">Approval</h2><p>Approval lets the agent carry out the whole plan without asking again. It still stops for actions you have not okayed and for host permission prompts. Your choice and your okay toggles go into the copied feedback.</p></div>
       <div class="ip-card" id="ip-approval-card"></div>
     </section>
     <section class="g-section" id="ip-history" hidden aria-labelledby="ip-history-title">
@@ -235,9 +279,11 @@ Planning additions are isolated in the second style block. See references/templa
     const blocks = new Map();
     const steps = new Map();
     const stepPlace = new Map();
+    const sectionOf = new Map();
     for (const section of plan.sections) {
       for (const block of section.blocks) {
         blocks.set(block.id, block);
+        sectionOf.set(block.id, section);
         if (block.type === "steps") block.items.forEach((step, index) => { steps.set(step.id, step); stepPlace.set(step.id, { block, number: index + 1 }); });
       }
     }
@@ -470,6 +516,17 @@ Planning additions are isolated in the second style block. See references/templa
       $("ip-progress").style.width = `${needed.length ? Math.round(done / needed.length * 100) : 100}%`;
       const optional = points.length - needed.length;
       $("ip-input-lede").textContent = `${needed.length === 1 ? "One point needs" : `${needed.length} points need`} your answer${optional ? `, and ${optional === 1 ? "one is" : `${optional} are`} optional` : ""}. The rest of the page is for reference. Comment on any part if you want a change.`;
+      for (const section of plan.sections) {
+        const box = $(`ip-s-${section.id}`);
+        if (!box) continue;
+        const mine = points.filter(point => sectionOf.get(point.id) === section);
+        const open = mine.filter(point => point.needed && !point.done).length;
+        const optional = mine.filter(point => !point.needed && !point.done).length;
+        box.replaceChildren();
+        if (open) box.append(chip(open === 1 ? "1 choice needs you" : `${open} choices need you`, "need"));
+        else if (optional) box.append(chip(optional === 1 ? "1 optional question" : `${optional} optional questions`));
+        else if (mine.length) box.append(chip("All answered", "done"));
+      }
       const fresh = [...replies.values()].filter(reply => reply.revision === plan.revision);
       $("ip-replies").textContent = fresh.length ? `The agent replied to ${fresh.length === 1 ? "one comment" : `${fresh.length} comments`} in this revision.` : "";
       const full = $("ip-full");
@@ -494,9 +551,13 @@ Planning additions are isolated in the second style block. See references/templa
       for (const section of plan.sections) {
         const node = element("section", undefined, "g-section");
         node.id = section.id;
-        const head = element("div", undefined, "g-section__head");
-        head.append(element("h2", section.title));
-        if (section.summary) head.append(para(section.summary, new Set()));
+        const head = element("div", undefined, "g-section__head ip-sec-head");
+        const text = element("div");
+        text.append(element("h2", section.title));
+        if (section.summary) text.append(para(section.summary, new Set()));
+        const status = element("div", undefined, "ip-sec-status");
+        status.id = `ip-s-${section.id}`;
+        head.append(text, status);
         node.append(head);
         const hidden = [];
         for (const block of section.blocks) {
@@ -512,12 +573,11 @@ Planning additions are isolated in the second style block. See references/templa
         root.append(node);
       }
     }
-    function headRow(unit, label, extra = []) {
+    function headRow(unit, title, extra = []) {
       const head = element("div", undefined, "ip-head");
-      head.append(element("span", unit.id, "ex-id"));
-      if (label) head.append(element("span", label, "ip-kind"));
-      if (changed(unit)) head.append(chip(unit._track.added ? "New" : "Updated", "upd"));
-      head.append(...extra);
+      if (title) head.append(title);
+      const marks = [...(changed(unit) ? [chip(unit._track.added ? "New" : "Updated", "upd")] : []), ...extra];
+      if (marks.length) { const box = element("div", undefined, "ip-tags"); box.append(...marks); head.append(box); }
       return head;
     }
     function extras(unit) {
@@ -683,8 +743,11 @@ Planning additions are isolated in the second style block. See references/templa
       const stateChips = [];
       if (block.type === "decision") { const decision = decisionState(block); stateChips.push(decision.answered ? chip("Answered", "done") : chip("Needs your choice", "need")); }
       if (block.type === "question") stateChips.push(questionState(block).answered ? chip("Answered", "done") : chip("Optional"));
-      card.append(headRow(block, typeLabels[block.type], stateChips));
-      if (block.title) { const title = element("h3"); title.id = `ip-h-${block.id}`; title.append(rich(block.title, used)); card.append(title); }
+      if (block.type === "decision" && !decisionState(block).answered) card.classList.add("is-open");
+      const heading = block.title ?? (block.type === "note" ? "" : typeLabels[block.type]);
+      let title = null;
+      if (heading) { title = element("h3"); title.id = `ip-h-${block.id}`; title.append(rich(heading, used)); }
+      if (title || stateChips.length || changed(block)) card.append(headRow(block, title, stateChips));
       if (block.body) card.append(para(block.body, used));
       if (block.type === "facts") {
         const list = element("dl", undefined, "ip-facts");
@@ -719,7 +782,7 @@ Planning additions are isolated in the second style block. See references/templa
         wrap.append(table);
         card.append(wrap);
       } else if (block.type === "code") {
-        if (block.language) card.append(element("span", block.language, "ip-kind"));
+        if (block.language) card.append(element("span", block.language, "ip-lang"));
         const pre = element("pre", undefined, "ip-code");
         pre.append(element("code", block.code));
         card.append(pre);
@@ -853,7 +916,7 @@ Planning additions are isolated in the second style block. See references/templa
       card.id = block.id;
       const stage = element("div", undefined, "ex-stage");
       const strip = element("div", undefined, "ex-strip");
-      strip.append(element("span", block.previewFile?.label ?? block.image.caption), element("span", block.id, "ex-strip__id"));
+      strip.append(element("span", block.previewFile?.label ?? block.image.caption));
       const canvas = element("div", undefined, "ex-canvas");
       if (block.previewFile) {
         canvas.classList.add("ip-flush");
@@ -879,12 +942,12 @@ Planning additions are isolated in the second style block. See references/templa
       stage.append(strip, canvas);
       const side = element("div", undefined, "ex-side");
       const meta = element("div", undefined, "ex-meta");
-      meta.append(element("span", block.id, "ex-id"));
       if (changed(block)) meta.append(chip(block._track.added ? "New" : "Updated", "upd"));
       if (seeTargets.has(block.id)) { const link = element("a", `Option in “${seeTargets.get(block.id).title}”`); link.href = `#${seeTargets.get(block.id).id}`; meta.append(link); }
       const title = element("h3", undefined, "ex-label");
       title.append(rich(block.title, used));
-      side.append(meta, title);
+      if (meta.childNodes.length) side.append(meta);
+      side.append(title);
       if (block.body) side.append(para(block.body, used, "ex-desc ip-text"));
       side.append(...extras(block));
       const diff = diffControl(block);
@@ -895,7 +958,6 @@ Planning additions are isolated in the second style block. See references/templa
       if (diff) actions.append(diff.toggle);
       feedback.append(...(diff ? [diff.panel] : []), comments.panel, actions);
       side.append(feedback);
-      card.dataset.commented = String(comments.count > 0);
       card.append(stage, side);
       return card;
     }
@@ -952,7 +1014,7 @@ Planning additions are isolated in the second style block. See references/templa
       for (const target of new Set(orphans.map(comment => comment.target))) {
         const removed = removedById.get(target);
         const box = element("div", undefined, "ip-card");
-        box.append(headRow({ id: target }, "Removed"), element("h3", removed?.title ?? target));
+        box.append(headRow({ id: target }, element("h3", removed?.title ?? target), [chip("Removed")]));
         if (removed?.text) { const more = element("details", undefined, "ip-more"); more.append(element("summary", "Text before removal"), element("p", removed.text, "ip-text")); box.append(more); }
         const panel = element("div", undefined, "ip-thread-wrap");
         for (const id of threadIds(target)) { const node = thread(target, id); if (node) panel.append(node); }

@@ -13,7 +13,7 @@ Its SHA-256, after trimming the surrounding whitespace, is:
 
 The page keeps the original `.g-bar`, `.g-hero`, `.g-intro`, `.g-box`, `.g-section`, `.ex`, and `.g-export` structures.
 Visual blocks keep the `.ex-stage`, `.ex-strip`, `.ex-canvas`, and `.ex-side` example card.
-The colors, fonts, sizes, and breakpoints come from the copied stylesheet.
+The fonts, sizes, and breakpoints come from the copied stylesheet.
 The renderer puts the stylesheet into each page, so the page needs no server.
 
 Version 2 additions live in the second style block of `assets/review.html` and use the `ip-` prefix:
@@ -23,6 +23,14 @@ Version 2 additions live in the second style block of `assets/review.html` and u
 3. Comment threads with agent replies.
 4. Collapsed unchanged parts, word diffs, and the removed-parts history.
 5. Term definitions that open on tap.
+
+The second style block also sets a softer palette over the copied color tokens, for both themes.
+The dark theme uses slate surfaces, and the light theme uses warm paper surfaces.
+A muted coral accent marks only the main actions, the open decisions, and the progress bar.
+Green marks recommended options and settled items. Blue tints mark notes.
+Each section starts with a thin divider line and has a status chip at the right of its heading.
+The page hides block IDs and type labels from view, but the copied feedback still uses the block IDs.
+Step comment buttons show on hover or focus on devices with a pointer, and they always show when the step has comments.
 
 The widget examples and animation controls of the original gallery are not part of this skill.
 Version 2 does not read version 1 storage or backups.
