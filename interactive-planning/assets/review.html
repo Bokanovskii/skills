@@ -138,12 +138,27 @@ Planning additions are isolated in the second style block. See references/templa
     .ip-thread-wrap:empty { display: none; }
     .ip-thread { display: grid; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 12.5px; }
     .ip-thread--open { background: var(--accent-subtle); }
-    .ip-thread summary { cursor: pointer; color: var(--muted); }
+    .ip-thread summary { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: baseline; gap: 4px 8px; margin: -4px -6px; padding: 4px 6px; border-radius: 6px; list-style: none; cursor: pointer; color: var(--muted); }
+    .ip-thread summary::-webkit-details-marker { display: none; }
+    .ip-thread summary:hover { background: var(--bg-hover); }
+    .ip-thread summary::before { content: ""; align-self: start; justify-self: center; margin-top: 7px; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(-45deg); transition: transform .15s ease-out; }
+    .ip-thread[open] summary::before { transform: translateY(-2px) rotate(45deg); }
     .ip-thread summary b { color: var(--ok); font-weight: 600; }
-    .ip-thread[open] summary { margin-bottom: 8px; }
-    .ip-thread .ip-msg { margin: 0; font-size: 12.5px; line-height: 1.5; }
-    .ip-who { display: block; font-size: 11px; color: var(--muted); }
+    .ip-thread-id { margin-left: 6px; white-space: nowrap; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+    .ip-thread-hint { font-size: 11.5px; white-space: nowrap; }
+    .ip-thread-hint::after { content: "Show reply"; }
+    .ip-thread[open] .ip-thread-hint::after { content: "Hide"; }
+    .ip-thread-peek { grid-column: 2 / -1; max-width: 72ch; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.5; color: var(--text); }
+    .ip-thread[open] .ip-thread-peek { display: none; }
+    .ip-thread[open] summary { margin-bottom: 4px; }
+    .ip-thread .ip-msg { margin: 0; max-width: 72ch; font-size: 12.5px; line-height: 1.5; }
+    .ip-thread .ip-msg--agent { padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.55; color: var(--text-strong); }
+    .ip-thread .ip-row .ip-cbtn:first-child { margin-left: -8px; }
+    .ip-who { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 600; color: var(--muted); }
+    .ip-who span { font-weight: 400; }
     .ip-msg--agent .ip-who { color: var(--info); }
+    .ip-msg--agent .ip-who span { color: var(--muted); }
+    @media (prefers-reduced-motion: reduce) { .ip-thread summary::before { transition: none; } }
     .ip-compose { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
     .ip-compose .ip-field { margin: 0; }
     .ip-card .g-fine { margin: 8px 0 0; font-size: 12.5px; color: var(--muted); }
@@ -659,7 +674,9 @@ Planning additions are isolated in the second style block. See references/templa
 
     function message(who, text, agent, label) {
       const node = element("p", undefined, `ip-msg ip-text${agent ? " ip-msg--agent" : ""}`);
-      node.append(element("span", label ? `${who} · ${label}` : who, "ip-who"), text);
+      const head = element("span", who, "ip-who");
+      if (label) head.append(element("span", ` · ${label}`));
+      node.append(head, text);
       return node;
     }
     function startComment(target, edit) {
@@ -710,7 +727,11 @@ Planning additions are isolated in the second style block. See references/templa
       if (isResolved(id)) {
         const node = element("details", undefined, "ip-thread");
         const summary = element("summary");
-        summary.append(element("b", replyLabels[reply.status]), ` · ${id} · ${reply.text.length > 90 ? `${reply.text.slice(0, 90)}…` : reply.text}`);
+        const title = element("span");
+        title.append(element("b", replyLabels[reply.status]), element("span", id, "ip-thread-id"));
+        const hint = element("span", undefined, "ip-thread-hint");
+        hint.setAttribute("aria-hidden", "true");
+        summary.append(title, hint, element("span", reply.text, "ip-thread-peek"));
         node.append(summary, message("You", comment?.text ?? reply.comment, false, tagLabel), message("Agent", reply.text, true, `revision ${reply.revision}`));
         const row = element("div", undefined, "ip-row");
         row.append(button("Reply", "ip-cbtn", () => startComment(target)), button("Reopen", "ip-cbtn", () => {

@@ -101,7 +101,11 @@ try {
   assert.equal(await page.locator("#current-facts").count(), 0, "an unchanged block is collapsed");
   await page.locator("#ip-full").click();
   assert.equal(await page.locator("#current-facts").count(), 1, "the full plan shows every block");
-  await page.locator("#why-slow details.ip-thread summary").click();
+  const resolved = page.locator("#why-slow details.ip-thread");
+  assert.ok(await resolved.locator(".ip-thread-peek").isVisible(), "a closed thread previews the reply");
+  await resolved.locator("summary").click();
+  assert.ok(await resolved.locator(".ip-thread-peek").isHidden(), "an open thread drops the preview");
+  assert.match(await resolved.locator(".ip-msg--agent").innerText(), /Added the wait time for two saves\.$/, "an open thread shows the full reply");
   await page.locator("#why-slow").getByRole("button", { name: "Reopen" }).click();
   assert.match(await feedback(page), /Comment why-slow\.1 \([a-z ]+, reopened\)/);
 
